@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Checkingx.Shared;
+using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 
 namespace Checkingx.Client.Services
@@ -73,6 +74,11 @@ namespace Checkingx.Client.Services
                 return result;
 
             throw new Exception("Check Item not found!");
+        }
+
+        public async Task CreateCheckingItem(Checking checking)
+        {
+            var result = await _http.PostAsJsonAsync("api/CheckingList/check-item-add", checking);
         }
     }
 }

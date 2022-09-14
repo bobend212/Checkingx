@@ -1,17 +1,41 @@
 ﻿@inject IProjectServiceClient ProjectService
 
 
-<h5>@checkItem.Title</h5>
+<div class="container text-center">
+    <h5>@checkItem.Title</h5>
+    <p>ID: @checkItem.Id</p>
+    <p>priority: @checkItem.Priority</p>
+</div>
+
+<EditForm Model="checking" OnSubmit="HandleSubmit">
+    <div>
+        <label>Issue Description</label>
+        <InputText @bind-Value="checking.Description" class="form-control"></InputText>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
 
 @code {
     [Parameter]
     public int Id { get; set; }
 
+    [Parameter]
+    public Project Project { get; set; }
+
     CheckItem checkItem = new CheckItem();
+    Checking checking = new Checking();
 
     protected async override Task OnParametersSetAsync()
     {
         checkItem = await ProjectService.GetSingleCheckItem(Id);
+    }
+
+    async Task HandleSubmit()
+    {
+        checking.ProjectId = Project.ProjectId;
+        checking.CheckItemId = checkItem.Id;
+        await ProjectService.CreateCheckingItem(checking);
     }
 
 }

@@ -14,5 +14,6 @@ namespace Checkingx.Shared
 
         [Required]
         public int CheckingPriority { get; set; }
+
     }
 }

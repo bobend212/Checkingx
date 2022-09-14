@@ -1,16 +1,27 @@
 ﻿@page "/checking"
+@page "/checking/{id:int}"
+@inject IProjectServiceClient ProjectService
 
-<h3>CheckingBase</h3>
+<h3>CheckingBase for @project.Number @project.Name</h3>
 
 <div style="display: flex; justify-content: space-between">
     <button type="button" class="btn btn-primary" @onclick="(() => NextItem())">Next</button>
     <button type="button" class="btn btn-primary" @onclick="(() => PreviousItem())">Previous</button>
 </div>
 
-<CheckItemView Id="itemId"/>
+<CheckItemView Id="itemId" Project="project" />
 
 @code {
+    [Parameter]
+    public int? Id { get; set; }
+
     int itemId = 1;
+    Project project = new Project();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        project = await ProjectService.GetSingleProject((int)Id);
+    }
 
     void NextItem()
     {

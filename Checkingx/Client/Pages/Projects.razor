@@ -13,7 +13,7 @@
         <thead>
             <tr>
                 <th></th>
-                <th>Project</th>
+                <th>(id) Project</th>
                 <th>Checking Priority</th>
                 <th></th>
             </tr>
@@ -23,9 +23,9 @@
             {
                 <tr>
                     <td><button class="btn btn-primary" @onclick="(() => ShowProject(project.ProjectId))"><span class="oi oi-pencil"></span></button></td>
-                    <td>@project.Number @project.Name</td>
+                    <td>(@project.ProjectId) @project.Number @project.Name</td>
                     <td>@project.CheckingPriority</td>
-                    <td><button class="btn btn-primary">Start Checking</button></td>
+                    <td><button class="btn btn-primary" @onclick="(() => StartChecking(project.ProjectId))">Start Checking</button></td>
                 </tr>
             }
         </tbody>
@@ -52,5 +52,10 @@ else
     void NewProject()
     {
         NavigationManager.NavigateTo("/new-project");
+    }
+
+    void StartChecking(int id)
+    {
+        NavigationManager.NavigateTo($"/checking/{id}");
     }
 }

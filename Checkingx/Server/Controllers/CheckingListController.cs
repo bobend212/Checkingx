@@ -1,5 +1,7 @@
-﻿using Checkingx.Shared;
+﻿using Checkingx.Server.Data;
+using Checkingx.Shared;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace Checkingx.Server.Controllers
@@ -8,6 +10,13 @@ namespace Checkingx.Server.Controllers
     [ApiController]
     public class CheckingListController : ControllerBase
     {
+        private readonly DataContext _context;
+
+        public CheckingListController(DataContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         public ActionResult<List<CheckItem>> GetAllCheckItems()
         {
@@ -31,6 +40,15 @@ namespace Checkingx.Server.Controllers
             if (findCheckItem == null) return NotFound("Check Item not found.");
 
             return Ok(findCheckItem);
+        }
+
+        [HttpPost("check-item-add")]
+        public async Task<ActionResult<Checking>> PostChecking(Checking model)
+        {
+            _context.Checkings.Add(model);
+            await _context.SaveChangesAsync();
+
+            return Ok(await _context.Checkings.FirstOrDefaultAsync(x => x.CheckingId == model.CheckingId));
         }
     }
 }

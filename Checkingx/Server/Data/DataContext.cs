@@ -10,5 +10,6 @@ namespace Checkingx.Server.Data
         }
 
         public DbSet<Project> Projects => Set<Project>();
+        public DbSet<Checking> Checkings => Set<Checking>();
     }
 }

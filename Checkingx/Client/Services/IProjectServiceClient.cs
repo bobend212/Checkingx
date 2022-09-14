@@ -18,5 +18,7 @@
         Task GetCheckingList();
 
         Task<CheckItem> GetSingleCheckItem(int id);
+
+        Task CreateCheckingItem(Checking checking);
     }
 }
