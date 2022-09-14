@@ -11,8 +11,10 @@ namespace Checkingx.Server.Controllers
         [HttpGet]
         public ActionResult<List<CheckItem>> GetAllCheckItems()
         {
+            string jsonLocation = $@"{Environment.CurrentDirectory}\Data\checking_list.json";
+
             List<CheckItem>? checkItems =
-                JsonConvert.DeserializeObject<List<CheckItem>>(System.IO.File.ReadAllText(@"C:\Users\mateusz.konopka\Work Folders\Desktop\Book1.json"));
+                JsonConvert.DeserializeObject<List<CheckItem>>(System.IO.File.ReadAllText(jsonLocation));
 
             return Ok(checkItems);
         }
