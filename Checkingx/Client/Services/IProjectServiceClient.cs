@@ -7,5 +7,11 @@
         Task GetProjects();
 
         Task<Project> GetSingleProject(int id);
+
+        Task CreateProject(Project project);
+
+        Task UpdateProject(Project project);
+
+        Task DeleteProject(int id);
     }
 }

@@ -35,9 +35,37 @@ namespace Checkingx.Server.Controllers
         public async Task<ActionResult<Project>> GetProject(int id)
         {
             var findProject = await _context.Projects.FindAsync(id);
-            if (findProject == null) return BadRequest("Project not found.");
+            if (findProject == null) return NotFound("Project not found.");
 
             return Ok(findProject);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<List<Project>>> UpdateProject(Project project, int id)
+        {
+            var dbProject = await _context.Projects.FirstOrDefaultAsync(x => x.ProjectId == id);
+            if (dbProject == null)
+                return NotFound("Project not found.");
+
+            dbProject.Number = project.Number;
+            dbProject.Name = project.Name;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(await _context.Projects.ToListAsync());
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<List<Project>>> DeleteProject(int id)
+        {
+            var dbProject = await _context.Projects.FirstOrDefaultAsync(x => x.ProjectId == id);
+            if (dbProject == null)
+                return NotFound("Project not found.");
+
+            _context.Projects.Remove(dbProject);
+            await _context.SaveChangesAsync();
+
+            return Ok(await _context.Projects.ToListAsync());
         }
     }
 }

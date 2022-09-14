@@ -1,28 +1,52 @@
 ﻿@page "/projects"
 @inject IProjectServiceClient ProjectService
+@inject NavigationManager NavigationManager
 
-<h3>Projects</h3>
+<div style="display: flex; justify-content:space-between">
+    <h3>Projects</h3>
+    <button class="btn btn-primary" @onclick="(() => NewProject())"><span class="oi oi-plus"></span></button>
+</div>
 
-<table class="table table-sm">
-    <thead>
-        <tr>
-            <th>Project</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var project in ProjectService.Projects)
-        {
+@if(ProjectService.Projects.Count > 0)
+{
+    <table class="table table-sm">
+        <thead>
             <tr>
-                <td>@project.Number @project.Name</td>
+                <th>Project</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var project in ProjectService.Projects)
+            {
+                <tr>
+                    <td>@project.Number @project.Name</td>
+                    <td><button class="btn btn-primary" @onclick="(() => ShowProject(project.ProjectId))"><span class="oi oi-pencil"></span></button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3 class="text-center">Add first project.</h3>
+}
+
 
 
 @code {
     protected override async Task OnInitializedAsync()
     {
         await ProjectService.GetProjects();
+    }
+
+    void ShowProject(int id)
+    {
+        NavigationManager.NavigateTo($"/project/{id}");
+    }
+
+    void NewProject()
+    {
+        NavigationManager.NavigateTo("/new-project");
     }
 }
