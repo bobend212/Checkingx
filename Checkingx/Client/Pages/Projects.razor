@@ -12,7 +12,9 @@
     <table class="table table-sm">
         <thead>
             <tr>
+                <th></th>
                 <th>Project</th>
+                <th>Checking Priority</th>
                 <th></th>
             </tr>
         </thead>
@@ -20,8 +22,10 @@
             @foreach (var project in ProjectService.Projects)
             {
                 <tr>
-                    <td>@project.Number @project.Name</td>
                     <td><button class="btn btn-primary" @onclick="(() => ShowProject(project.ProjectId))"><span class="oi oi-pencil"></span></button></td>
+                    <td>@project.Number @project.Name</td>
+                    <td>@project.CheckingPriority</td>
+                    <td><button class="btn btn-primary">Start Checking</button></td>
                 </tr>
             }
         </tbody>

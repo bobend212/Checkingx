@@ -49,6 +49,7 @@ namespace Checkingx.Server.Controllers
 
             dbProject.Number = project.Number;
             dbProject.Name = project.Name;
+            dbProject.CheckingPriority = project.CheckingPriority;
 
             await _context.SaveChangesAsync();
 

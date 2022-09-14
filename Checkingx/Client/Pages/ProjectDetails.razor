@@ -19,6 +19,14 @@ else
             <label>Name</label>
             <InputText @bind-Value="project.Name" class="form-control"></InputText>
         </div>
+        <div>
+            <label>Checking Priority</label>
+            <InputSelect @bind-Value="project.CheckingPriority" class="form-select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </InputSelect>
+        </div>
         <br />
         <button type="submit" class="btn btn-primary">Update</button>
         <button type="button" class="btn btn-danger" @onclick="DeleteProject">Delete</button>

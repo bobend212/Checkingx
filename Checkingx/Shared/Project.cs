@@ -11,5 +11,8 @@ namespace Checkingx.Shared
 
         [Required]
         public string Name { get; set; } = string.Empty;
+
+        [Required]
+        public int CheckingPriority { get; set; }
     }
 }
