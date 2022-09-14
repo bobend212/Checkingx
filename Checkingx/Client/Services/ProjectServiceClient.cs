@@ -15,6 +15,7 @@ namespace Checkingx.Client.Services
         }
 
         public List<Project> Projects { get; set; } = new List<Project>();
+        public List<CheckItem> CheckingList { get; set; } = new List<CheckItem>();
 
         public async Task GetProjects()
         {
@@ -56,6 +57,13 @@ namespace Checkingx.Client.Services
             var response = await result.Content.ReadFromJsonAsync<List<Project>>();
             Projects = response;
             _navigationManager.NavigateTo("projects");
+        }
+
+        public async Task GetCheckingList()
+        {
+            var result = await _http.GetFromJsonAsync<List<CheckItem>>("api/CheckingList");
+            if (result != null)
+                CheckingList = result;
         }
     }
 }

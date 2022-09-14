@@ -1,0 +1,25 @@
+﻿@page "/checking-list"
+@inject IProjectServiceClient ProjectService
+
+<h3>CheckingList</h3>
+
+
+@foreach (var item in ProjectService.CheckingList.GroupBy(x => x.Category))
+{
+    <hr />
+    <h4>@item.Key.ToUpper()</h4>
+    <ul class="list-group">
+        @foreach (var item2 in item)
+        {
+            <li class="">@item2.Title</li>
+        }
+    </ul>
+}
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await ProjectService.GetCheckingList();
+    }
+}
