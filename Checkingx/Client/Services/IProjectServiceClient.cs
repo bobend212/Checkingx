@@ -16,5 +16,7 @@
         Task DeleteProject(int id);
 
         Task GetCheckingList();
+
+        Task<CheckItem> GetSingleCheckItem(int id);
     }
 }

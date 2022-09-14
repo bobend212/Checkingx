@@ -65,5 +65,14 @@ namespace Checkingx.Client.Services
             if (result != null)
                 CheckingList = result;
         }
+
+        public async Task<CheckItem> GetSingleCheckItem(int id)
+        {
+            var result = await _http.GetFromJsonAsync<CheckItem>($"api/CheckingList/{id}");
+            if (result != null)
+                return result;
+
+            throw new Exception("Check Item not found!");
+        }
     }
 }

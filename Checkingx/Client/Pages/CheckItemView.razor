@@ -1,0 +1,17 @@
+﻿@inject IProjectServiceClient ProjectService
+
+
+<h5>@checkItem.Title</h5>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    CheckItem checkItem = new CheckItem();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        checkItem = await ProjectService.GetSingleCheckItem(Id);
+    }
+
+}

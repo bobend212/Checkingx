@@ -1,0 +1,25 @@
+﻿@page "/checking"
+
+<h3>CheckingBase</h3>
+
+<div style="display: flex; justify-content: space-between">
+    <button type="button" class="btn btn-primary" @onclick="(() => NextItem())">Next</button>
+    <button type="button" class="btn btn-primary" @onclick="(() => PreviousItem())">Previous</button>
+</div>
+
+<CheckItemView Id="itemId"/>
+
+@code {
+    int itemId = 1;
+
+    void NextItem()
+    {
+        itemId++;
+    }
+
+    void PreviousItem()
+    {
+        itemId--;
+    }
+
+}
