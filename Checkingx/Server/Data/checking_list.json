@@ -2,56 +2,67 @@
  {
    "Id": 1,
    "Title": "Ensure slab follows outline of ground floor.",
+   "Priority": "1",
    "Category": "Slab"
  },
  {
    "Id": 2,
    "Title": "Batten line is not shown on slab.",
+   "Priority": "1",
    "Category": "Slab"
  },
  {
    "Id": 3,
    "Title": "All load bearing walls are indicated.",
+   "Priority": "2",
    "Category": "Slab"
  },
  {
    "Id": 4,
    "Title": "All internal and external walls dimensioned and dimensions are accurate.",
+   "Priority": "2",
    "Category": "Slab"
  },
  {
    "Id": 5,
    "Title": "Cross dimensions are shown.",
+   "Priority": "3",
    "Category": "Slab"
  },
  {
    "Id": 6,
    "Title": "Point load symbols shown and dimensioned. Point loads are split for joinery",
+   "Priority": "1",
    "Category": "Slab"
  },
  {
    "Id": 7,
    "Title": "All point loads end up on a sufficient beam or a load bearing wall.",
+   "Priority": "3",
    "Category": "Slab"
  },
  {
    "Id": 8,
    "Title": "Portal panel shoes shown and dimensioned. Note added to ensure coursing blocks are left out where the shoe is positioned.",
+   "Priority": "1",
    "Category": "Slab"
  },
  {
    "Id": 9,
    "Title": "Slab edge distance and spacing between bolts connecting portal frames/steel posts are correct.",
+   "Priority": "1",
    "Category": "Panels"
  },
  {
    "Id": 10,
    "Title": "If step in slab level appears, it is clearly indicated and detail is added.",
+   "Priority": "2",
    "Category": "Roof"
  },
  {
    "Id": 11,
    "Title": "Blalsdlslasldl dlas dlsa. ELelelelel.",
+   "Priority": "1",
    "Category": "Roof"
  }
 ]

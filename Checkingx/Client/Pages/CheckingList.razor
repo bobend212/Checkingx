@@ -11,7 +11,10 @@
     <ul class="list-group">
         @foreach (var item2 in item)
         {
-            <li class="">@item2.Title</li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @item2.Title
+                <span>@item2.Priority</span>
+            </li>
         }
     </ul>
 }
