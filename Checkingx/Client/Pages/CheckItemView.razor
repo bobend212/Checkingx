@@ -3,7 +3,7 @@
 
 <div class="container text-center">
     <h5>@checkItem.Title</h5>
-    <p>ID: @checkItem.Id</p>
+    <p>ID: @checkItem.CheckItemId</p>
     <p>priority: @checkItem.Priority</p>
 </div>
 
@@ -34,7 +34,7 @@
     async Task HandleSubmit()
     {
         checking.ProjectId = Project.ProjectId;
-        checking.CheckItemId = checkItem.Id;
+        checking.CheckItemId = checkItem.CheckItemId;
         await ProjectService.CreateCheckingItem(checking);
     }
 

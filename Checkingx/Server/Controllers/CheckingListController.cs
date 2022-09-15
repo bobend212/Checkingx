@@ -36,7 +36,7 @@ namespace Checkingx.Server.Controllers
             List<CheckItem>? checkItems =
                 JsonConvert.DeserializeObject<List<CheckItem>>(System.IO.File.ReadAllText(jsonLocation));
 
-            var findCheckItem = checkItems.FirstOrDefault(x => x.Id == id);
+            var findCheckItem = checkItems.FirstOrDefault(x => x.CheckItemId == id);
             if (findCheckItem == null) return NotFound("Check Item not found.");
 
             return Ok(findCheckItem);
@@ -45,10 +45,19 @@ namespace Checkingx.Server.Controllers
         [HttpPost("check-item-add")]
         public async Task<ActionResult<Checking>> PostChecking(Checking model)
         {
-            _context.Checkings.Add(model);
+            _context.Checking.Add(model);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Checkings.FirstOrDefaultAsync(x => x.CheckingId == model.CheckingId));
+            return Ok(await _context.Checking.FirstOrDefaultAsync(x => x.CheckingId == model.CheckingId));
+        }
+
+        [HttpGet("project/{projectId}")]
+        public async Task<ActionResult<List<Checking>>> GetAllCheckingsByProjectId(int projectId)
+        {
+            var findCheckings = await _context.Checking.Where(x => x.ProjectId == projectId).Include(x => x.Project).Include(x => x.CheckItem).ToListAsync();
+            if (findCheckings == null) return NotFound("Checkings not found.");
+
+            return Ok(findCheckings);
         }
     }
 }
