@@ -95,5 +95,6 @@ namespace Checkingx.Client.Services
         {
             var result = await _http.PutAsJsonAsync($"api/CheckingList/{checking.CheckingId}/correct", checking);
         }
+
     }
 }

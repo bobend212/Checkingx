@@ -1,0 +1,55 @@
+﻿@page "/checking/new/{id:int}"
+@inject IProjectServiceClient ProjectService
+
+<h3>CheckingAdd</h3>
+
+
+@foreach (var item in CheckItemList.GroupBy(x => x.Category))
+{
+    <hr />
+    <h4>@item.Key.ToUpper()</h4>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Correct</th>
+                <th>Incorrect</th>
+                <th>Not Applicable</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var checkItem in item)
+            {
+                <tr>
+                    <td>@checkItem.Title</td>
+                    <td><button class="btn btn-success">Correct</button></td>
+                    <td><button class="btn btn-danger">Incorrect</button></td>
+                    <td><button class="btn btn-secondary">N/A</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    List<CheckItem> CheckItemList = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ProjectService.GetCheckingList();
+        CheckItemList = ProjectService.CheckingList;
+    }
+
+    async Task HandleChecking(string operation)
+    {
+        //checking.IsCorrected = true;
+        //await ProjectService.CorrectError(checking);
+        //NavigationManager.NavigateTo($"/checking/{checking.ProjectId}");
+    }
+
+
+}

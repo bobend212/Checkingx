@@ -10,5 +10,6 @@
         public string? Description { get; set; }
         public bool IsError { get; set; }
         public bool IsCorrected { get; set; }
+        public bool IsNA { get; set; }
     }
 }

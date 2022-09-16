@@ -2,27 +2,11 @@
 @inject IProjectServiceClient ProjectService
 @inject NavigationManager NavigationManager
 
-
-@*<div class="container text-center">
-    <h5>@checkItem.Title</h5>
-    <p>ID: @checkItem.CheckItemId</p>
-    <p>priority: @checkItem.Priority</p>
-</div>
-
-<EditForm Model="checking" OnSubmit="HandleSubmit">
-    <div>
-        <label>Issue Description</label>
-        <InputText @bind-Value="checking.Description" class="form-control"></InputText>
-    </div>
-    <br />
-    <button type="submit" class="btn btn-primary">Submit</button>
-</EditForm>*@
-
 <div class="card">
     <h5 class="card-header">Error Description</h5>
     <div class="card-body">
         <h5 class="card-title">@checking.Description</h5>
-        <button class="btn btn-success" @onclick="(() => HandleSubmit())">Correct</button>
+        <button class="btn btn-success" @onclick="(() => HandleCorrect())">Correct</button>
     </div>
 </div>
 
@@ -30,10 +14,6 @@
     [Parameter]
     public int Id { get; set; }
 
-    [Parameter]
-    public Project Project { get; set; }
-
-    CheckItem checkItem = new CheckItem();
     Checking checking = new Checking();
 
     protected async override Task OnParametersSetAsync()
@@ -41,7 +21,7 @@
         checking = await ProjectService.GetSingleCheckingById(Id);
     }
 
-    async Task HandleSubmit()
+    async Task HandleCorrect()
     {
         checking.IsCorrected = true;
         await ProjectService.CorrectError(checking);

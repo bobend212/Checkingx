@@ -82,5 +82,16 @@ namespace Checkingx.Server.Controllers
 
             return Ok(findChecking);
         }
+
+        [HttpGet("project/{projectId}/{checkItemId}")]
+        public async Task<ActionResult<Checking>> GetAllCheckingsByProjectId(int projectId, int checkItemId)
+        {
+            var findCheckings = await _context.Checking.Where(x => x.ProjectId == projectId).Include(x => x.Project).Include(x => x.CheckItem).ToListAsync();
+            if (findCheckings == null) return NotFound("Checkings not found.");
+
+            var findResult = findCheckings.Where(x => x.CheckItemId == checkItemId);
+
+            return Ok(findResult);
+        }
     }
 }
