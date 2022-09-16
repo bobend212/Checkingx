@@ -59,5 +59,28 @@ namespace Checkingx.Server.Controllers
 
             return Ok(findCheckings);
         }
+
+        [HttpGet("checking/{id}")]
+        public async Task<ActionResult<Checking>> GetSingleCheckingById(int id)
+        {
+            var findChecking = await _context.Checking.Include(x => x.CheckItem).FirstOrDefaultAsync(x => x.CheckingId == id);
+            if (findChecking == null) return NotFound("Checking not found.");
+
+            return Ok(findChecking);
+        }
+
+        [HttpPut("{id}/correct")]
+        public async Task<ActionResult<Checking>> CorrectError(Checking checking, int id)
+        {
+            var findChecking = await _context.Checking.FirstOrDefaultAsync(x => x.CheckingId == id);
+            if (findChecking == null)
+                return NotFound("Checking not found.");
+
+            findChecking.IsCorrected = checking.IsCorrected;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(findChecking);
+        }
     }
 }

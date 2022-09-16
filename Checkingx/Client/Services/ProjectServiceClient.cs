@@ -1,4 +1,5 @@
-﻿using Checkingx.Shared;
+﻿using Checkingx.Client.Pages;
+using Checkingx.Shared;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 
@@ -79,6 +80,20 @@ namespace Checkingx.Client.Services
         public async Task CreateCheckingItem(Checking checking)
         {
             var result = await _http.PostAsJsonAsync("api/CheckingList/check-item-add", checking);
+        }
+
+        public async Task<Checking> GetSingleCheckingById(int id)
+        {
+            var result = await _http.GetFromJsonAsync<Checking>($"api/CheckingList/checking/{id}");
+            if (result != null)
+                return result;
+
+            throw new Exception("Checking not found!");
+        }
+
+        public async Task CorrectError(Checking checking)
+        {
+            var result = await _http.PutAsJsonAsync($"api/CheckingList/{checking.CheckingId}/correct", checking);
         }
     }
 }

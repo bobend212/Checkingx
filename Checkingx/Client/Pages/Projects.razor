@@ -15,6 +15,7 @@
                 <th></th>
                 <th>(id) Project</th>
                 <th>Checking Priority</th>
+                <th>Errors Found</th>
                 <th></th>
             </tr>
         </thead>
@@ -22,10 +23,18 @@
             @foreach (var project in ProjectService.Projects)
             {
                 <tr>
-                    <td><button class="btn btn-primary" @onclick="(() => ShowProject(project.ProjectId))"><span class="oi oi-pencil"></span></button></td>
+                    <td><button class="btn btn-primary" @onclick="(() => EditProject(project.ProjectId))"><span class="oi oi-pencil"></span></button></td>
                     <td>(@project.ProjectId) @project.Number @project.Name</td>
                     <td>@project.CheckingPriority</td>
-                    <td><button class="btn btn-primary" @onclick="(() => StartChecking(project.ProjectId))">Start Checking</button></td>
+                    <td>@project.Checking.Count()</td>
+                    @if (project.Checking == null || project.Checking.Count() != 0)
+                    {
+                        <td><button class="btn btn-success" @onclick="(() => GoToChecking(project.ProjectId))">Open Checking</button></td>
+                    }
+                    else
+                    {
+                        <td><button class="btn btn-primary" @onclick="(() => GoToChecking(project.ProjectId))">Create Checking</button></td>
+                    }
                 </tr>
             }
         </tbody>
@@ -44,7 +53,7 @@ else
         await ProjectService.GetProjects();
     }
 
-    void ShowProject(int id)
+    void EditProject(int id)
     {
         NavigationManager.NavigateTo($"/project/{id}");
     }
@@ -54,7 +63,7 @@ else
         NavigationManager.NavigateTo("/new-project");
     }
 
-    void StartChecking(int id)
+    void GoToChecking(int id)
     {
         NavigationManager.NavigateTo($"/checking/{id}");
     }

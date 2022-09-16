@@ -28,13 +28,13 @@ namespace Checkingx.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Project>>> GetAllProjects()
         {
-            return Ok(await _context.Projects.ToListAsync());
+            return Ok(await _context.Projects.Include(x => x.Checking).ThenInclude(x => x.CheckItem).ToListAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Project>> GetProject(int id)
         {
-            var findProject = await _context.Projects.FindAsync(id);
+            var findProject = await _context.Projects.Include(x => x.Checking).ThenInclude(x => x.CheckItem).FirstOrDefaultAsync(x => x.ProjectId == id);
             if (findProject == null) return NotFound("Project not found.");
 
             return Ok(findProject);

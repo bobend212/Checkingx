@@ -8,7 +8,7 @@
         public CheckItem? CheckItem { get; set; }
         public int CheckItemId { get; set; }
         public string? Description { get; set; }
-        public bool FoundError { get; set; }
-        public bool Ignored { get; set; }
+        public bool IsError { get; set; }
+        public bool IsCorrected { get; set; }
     }
 }

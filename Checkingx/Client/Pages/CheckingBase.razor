@@ -1,7 +1,9 @@
 ﻿@page "/checking"
 @page "/checking/{id:int}"
 @inject IProjectServiceClient ProjectService
+@inject NavigationManager NavigationManager
 
+@*<div>
 <h3>CheckingBase for @project.Number @project.Name</h3>
 
 <div style="display: flex; justify-content: space-between">
@@ -33,4 +35,66 @@
         itemId--;
     }
 
+}
+</div>*@
+
+
+
+@foreach (var item in checkingList.GroupBy(x => x.CheckItem?.Category))
+{
+    <h4>@item.Key (@item.Count()) errors found</h4>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Priority</th>
+                <th>IsError</th>
+                <th>IsCorrected</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var checkItem in item)
+            {
+                <tr class="@StyleForRow_IsCorrected(@checkItem.IsCorrected)">
+                    <td>@checkItem.CheckItem.Title</td>
+                    <td>@checkItem.CheckItem.Priority</td>
+                    <td>@checkItem.IsError</td>
+                    <td>@checkItem.IsCorrected</td>
+                    <td><button class="btn btn-primary" @onclick="(() => GoToCheckingDetails(checkItem.CheckingId))"><span class="oi oi-chevron-right"></span></button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Project project = new Project();
+    List<Checking> checkingList = new List<Checking>();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        project = await ProjectService.GetSingleProject(Id);
+        checkingList = project.Checking;
+    }
+
+    void GoToCheckingDetails(int id)
+    {
+        NavigationManager.NavigateTo($"/checking/{id}/details");
+    }
+
+    private string StyleForRow_IsCorrected(bool val)
+    {
+        if (val == true) return "table-info";
+        if (val != true) return "table-danger";
+        return "table";
+    }
 }

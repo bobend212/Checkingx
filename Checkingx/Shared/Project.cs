@@ -15,5 +15,7 @@ namespace Checkingx.Shared
         [Required]
         public int CheckingPriority { get; set; }
 
+        public List<Checking>? Checking { get; set; }
+
     }
 }
