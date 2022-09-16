@@ -2,6 +2,7 @@
 using Checkingx.Shared;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
+using System.Text.Json.Nodes;
 
 namespace Checkingx.Client.Services
 {
@@ -17,7 +18,8 @@ namespace Checkingx.Client.Services
         }
 
         public List<Project> Projects { get; set; } = new List<Project>();
-        public List<CheckItem> CheckingList { get; set; } = new List<CheckItem>();
+        public List<CheckItem> CheckItemList { get; set; } = new List<CheckItem>();
+        public List<Checking> Checkings { get; set; } = new List<Checking>();
 
         public async Task GetProjects()
         {
@@ -61,11 +63,18 @@ namespace Checkingx.Client.Services
             _navigationManager.NavigateTo("projects");
         }
 
-        public async Task GetCheckingList()
+        public async Task GetAllCheckings()
         {
-            var result = await _http.GetFromJsonAsync<List<CheckItem>>("api/CheckingList");
+            var result = await _http.GetFromJsonAsync<List<Checking>>("api/CheckingList/checkings");
             if (result != null)
-                CheckingList = result;
+                Checkings = result;
+        }
+
+        public async Task GetAllCheckItems()
+        {
+            var result = await _http.GetFromJsonAsync<List<CheckItem>>("api/CheckingList/checkItems");
+            if (result != null)
+                CheckItemList = result;
         }
 
         public async Task<CheckItem> GetSingleCheckItem(int id)
@@ -96,5 +105,10 @@ namespace Checkingx.Client.Services
             var result = await _http.PutAsJsonAsync($"api/CheckingList/{checking.CheckingId}/correct", checking);
         }
 
+        public async Task<List<CheckItem>> ShowOnlyCheckingsNotCheckedByProject(int projectId)
+        {
+            var result = await _http.GetFromJsonAsync<List<CheckItem>>($"api/CheckingList/show-not-checked-by-project?projectId={projectId}");
+            return result;
+        }
     }
 }

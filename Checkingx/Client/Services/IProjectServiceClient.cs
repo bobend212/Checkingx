@@ -1,10 +1,13 @@
-﻿namespace Checkingx.Client.Services
+﻿using System.Text.Json.Nodes;
+
+namespace Checkingx.Client.Services
 {
     public interface IProjectServiceClient
     {
         List<Project> Projects { get; set; }
 
-        List<CheckItem> CheckingList { get; set; }
+        List<CheckItem> CheckItemList { get; set; }
+        List<Checking> Checkings { get; set; }
 
         Task GetProjects();
 
@@ -16,7 +19,8 @@
 
         Task DeleteProject(int id);
 
-        Task GetCheckingList();
+        Task GetAllCheckings();
+        Task GetAllCheckItems();
 
         Task<CheckItem> GetSingleCheckItem(int id);
 
@@ -25,5 +29,7 @@
         Task<Checking> GetSingleCheckingById(int id);
 
         Task CorrectError(Checking checking);
+
+        Task<List<CheckItem>> ShowOnlyCheckingsNotCheckedByProject(int projectId);
     }
 }

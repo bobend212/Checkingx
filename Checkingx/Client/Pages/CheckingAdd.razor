@@ -4,18 +4,17 @@
 <h3>CheckingAdd</h3>
 
 
-@foreach (var item in CheckItemList.GroupBy(x => x.Category))
+@foreach (var item in x.GroupBy(x => x.Category))
 {
     <hr />
     <h4>@item.Key.ToUpper()</h4>
-    <table class="table table-sm">
+    <table class="table table-sm" style="table-layout: fixed; word-wrap: break-word">
         <thead>
             <tr>
-                <th>Title</th>
-                <th>Correct</th>
-                <th>Incorrect</th>
-                <th>Not Applicable</th>
-                <th></th>
+                <th style="width: 75%; text-align: left">Title</th>
+                <th style="text-align: center">Correct</th>
+                <th style="text-align: center">Incorrect</th>
+                <th style="text-align: center">Not Applicable</th>
             </tr>
         </thead>
         <tbody>
@@ -23,9 +22,9 @@
             {
                 <tr>
                     <td>@checkItem.Title</td>
-                    <td><button class="btn btn-success">Correct</button></td>
-                    <td><button class="btn btn-danger">Incorrect</button></td>
-                    <td><button class="btn btn-secondary">N/A</button></td>
+                    <td style="text-align: center"><button class="btn btn-success"><span class="oi oi-check"></span></button></td>
+                    <td style="text-align: center"><button class="btn btn-danger"><span class="oi oi-x"></span></button></td>
+                    <td style="text-align: center"><button class="btn btn-secondary" @onclick="(() => HandleChecking(Id, checkItem.CheckItemId))">N/A</button></td>
                 </tr>
             }
         </tbody>
@@ -36,16 +35,16 @@
     [Parameter]
     public int Id { get; set; }
 
-    List<CheckItem> CheckItemList = new();
+    List<CheckItem> x = new();
 
     protected override async Task OnInitializedAsync()
     {
-        await ProjectService.GetCheckingList();
-        CheckItemList = ProjectService.CheckingList;
+        x = await ProjectService.ShowOnlyCheckingsNotCheckedByProject(Id);
     }
 
-    async Task HandleChecking(string operation)
+    async Task HandleChecking(int projectId, int checkItemId)
     {
+        Console.WriteLine($"projID: {projectId}, checkItemId: {checkItemId}");
         //checking.IsCorrected = true;
         //await ProjectService.CorrectError(checking);
         //NavigationManager.NavigateTo($"/checking/{checking.ProjectId}");

@@ -17,15 +17,16 @@ namespace Checkingx.Server.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public ActionResult<List<CheckItem>> GetAllCheckItems()
+        [HttpGet("checkings")]
+        public async Task<ActionResult<List<Checking>>> GetAllCheckings()
         {
-            string jsonLocation = $@"{Environment.CurrentDirectory}\Data\checking_list.json";
+            return Ok(await _context.Checking.ToListAsync());
+        }
 
-            List<CheckItem>? checkItems =
-                JsonConvert.DeserializeObject<List<CheckItem>>(System.IO.File.ReadAllText(jsonLocation));
-
-            return Ok(checkItems);
+        [HttpGet("checkItems")]
+        public async Task<ActionResult<List<CheckItem>>> GetAllCheckItems()
+        {
+            return Ok(await _context.CheckItems.ToListAsync());
         }
 
         [HttpGet("{id}")]
@@ -92,6 +93,33 @@ namespace Checkingx.Server.Controllers
             var findResult = findCheckings.Where(x => x.CheckItemId == checkItemId);
 
             return Ok(findResult);
+        }
+
+        [HttpGet("show-not-checked-by-project")]
+        public async Task<ActionResult<List<CheckItem>>> ShowOnlyCheckingsNotCheckedByProject(int projectId)
+        {
+            var findProject = await _context.Projects.FirstOrDefaultAsync(x => x.ProjectId == projectId);
+
+            var allCheckItems = await _context.CheckItems.ToListAsync();
+
+            var projectCheckItems = await _context.Projects
+                .Where(x => x.ProjectId == projectId)
+                .SelectMany(x => x.Checking.Select(x => x.CheckItem))
+                .ToListAsync();
+
+
+            var checkItemsNotChecked = allCheckItems.Where(p => !projectCheckItems.Any(p2 => p2.CheckItemId == p.CheckItemId)).ToList();
+
+            //var result = new
+            //{ 
+            //    Project = findProject.Number,
+            //    TotalCheckItems = allCheckItems.Count,
+            //    CheckedCheckItems = allCheckItems.Count - (allCheckItems.Count - projectCheckItems.Count),
+            //    LeftCheckItems = allCheckItems.Count - projectCheckItems.Count,
+            //    CheckItems = checkItemsNotChecked
+            //};
+
+            return Ok(checkItemsNotChecked);
         }
     }
 }

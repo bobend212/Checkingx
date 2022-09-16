@@ -4,7 +4,7 @@
 <h3>CheckingList</h3>
 
 
-@foreach (var item in ProjectService.CheckingList.GroupBy(x => x.Category))
+@foreach (var item in ProjectService.CheckItemList.GroupBy(x => x.Category))
 {
     <hr />
     <h4>@item.Key.ToUpper()</h4>
@@ -23,6 +23,6 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await ProjectService.GetCheckingList();
+        await ProjectService.GetAllCheckItems();
     }
 }
