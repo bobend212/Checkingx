@@ -13,9 +13,20 @@
         <label>Description</label>
         <InputTextArea @bind-Value="newChecking.Description" class="form-control" required rows="3"></InputTextArea>
     </div>
+    <div>
+        <InputFile id="images" OnChange="OnFileChange" multiple></InputFile>
+    </div>
+    <div>
+        @foreach (var image in imagesList)
+        {
+            <img src="@image.Data" width="100" height="100" />
+        }
+    </div>
     <br />
     <button type="submit" class="btn btn-danger">Report</button>
 </EditForm>
+
+
 
 @code {
     [Parameter]
@@ -25,6 +36,7 @@
     public int CheckItemId { get; set; }
 
     Checking newChecking = new();
+    List<Image> imagesList = new();
 
     async Task MarkAsError()
     {
@@ -33,8 +45,22 @@
         newChecking.IsError = true;
         newChecking.IsFixed = false;
         newChecking.IsNA = false;
+        newChecking.Images = imagesList;
 
         await CheckingService.CreateCheckingItem(newChecking);
         NavigationManager.NavigateTo($"/checking/new/{ProjectId}");
+    }
+
+    async Task OnFileChange(InputFileChangeEventArgs e)
+    {
+        var format = "image/png";
+        foreach (var image in e.GetMultipleFiles(int.MaxValue))
+        {
+            var resizedImage = await image.RequestImageFileAsync(format, 1200, 1200);
+            var buffer = new byte[resizedImage.Size];
+            await resizedImage.OpenReadStream().ReadAsync(buffer);
+            var imageData = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+            imagesList.Add(new Image { Data = imageData });
+        }
     }
 }

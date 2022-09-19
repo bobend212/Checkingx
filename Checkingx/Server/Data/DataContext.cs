@@ -12,6 +12,7 @@ namespace Checkingx.Server.Data
         public DbSet<Project> Projects => Set<Project>();
         public DbSet<Checking> Checking => Set<Checking>();
         public DbSet<CheckItem> CheckItems => Set<CheckItem>();
+        public DbSet<Image> Images => Set<Image>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

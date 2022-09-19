@@ -6,6 +6,18 @@
     <h5 class="card-header">Error Description</h5>
     <div class="card-body">
         <h5 class="card-title">@checking.Description</h5>
+        <div>
+            @if (checking.Images.Count > 0)
+            {
+                <MudCarousel Class="mud-width-full" ItemsSource="@checking.Images" Style="height: 700px" AutoCycle="false">
+                    <ItemTemplate>
+                        <div class="d-flex justify-center" style="height:100%">
+                            <MudImage Src="@context.Data" ObjectFit="ObjectFit.Fill"></MudImage>
+                        </div>
+                    </ItemTemplate>
+                </MudCarousel>
+            }
+        </div>
         <button class="btn btn-success" @onclick="(() => HandleCorrect())">Correct</button>
     </div>
 </div>

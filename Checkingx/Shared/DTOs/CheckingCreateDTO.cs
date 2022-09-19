@@ -14,5 +14,7 @@ namespace Checkingx.Shared.DTOs
         public bool IsError { get; set; }
         public bool IsFixed { get; set; }
         public bool IsNA { get; set; }
+
+        public List<Image> Images { get; set; } = new List<Image>();
     }
 }

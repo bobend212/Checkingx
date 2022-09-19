@@ -41,7 +41,7 @@ namespace Checkingx.Server.Controllers
         [HttpGet("single/{checkingId}")]
         public async Task<ActionResult<Checking>> GetSingleCheckingById(int checkingId)
         {
-            var findChecking = await _context.Checking.Include(x => x.CheckItem).FirstOrDefaultAsync(x => x.CheckingId == checkingId);
+            var findChecking = await _context.Checking.Include(x => x.Images).Include(x => x.CheckItem).FirstOrDefaultAsync(x => x.CheckingId == checkingId);
             if (findChecking == null) return NotFound("Checking not found.");
 
             return Ok(findChecking);
