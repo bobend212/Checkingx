@@ -2,7 +2,7 @@
 @inject ICheckItemServiceClient CheckItemService
 @inject NavigationManager NavigationManager
 
-<h3>@checkItem.Title</h3>
+@*<h3>@checkItem.Title</h3>
 <h4>@checkItem.Category</h4>
 
 <EditForm Model="checkItem" OnSubmit="HandleSubmit">
@@ -25,13 +25,33 @@
     <br />
     <button type="submit" class="btn btn-primary">Update</button>
     <button type="button" class="btn btn-danger" @onclick="DeleteCheckItem">Delete</button>
-</EditForm>
+</EditForm>*@
+
+<div style="display: flex; justify-content:space-between; margin-bottom: 5px">
+    <MudText Typo="Typo.h4">Check Item - Update</MudText>
+    <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToCheckItemList())">Back To list</MudButton>
+</div>
+
+<MudForm @ref="form">
+    <MudTextField T="string" Label="Title" Required="true" Variant="Variant.Filled" @bind-Value="checkItem.Title" />
+    <MudTextField T=" string" Label="Category" Required="true" Variant="Variant.Filled" @bind-Value="checkItem.Category" />
+    <MudSelect Dense="true" T="int" Label="Priority" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="checkItem.Priority" Required="true">
+        <MudSelectItem T="int" Value="1">1</MudSelectItem>
+        <MudSelectItem T="int" Value="2">2</MudSelectItem>
+        <MudSelectItem T="int" Value="3">3</MudSelectItem>
+    </MudSelect>
+    <div class="mt-2">
+        <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Success" @onclick="(() => HandleSubmit())">Submit</MudButton>
+        <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Error" @onclick="(() => DeleteCheckItem())">Remove</MudButton>
+    </div>
+</MudForm>
 
 @code {
     [Parameter]
     public int CheckItemId { get; set; }
 
     CheckItem checkItem = new();
+    MudForm? form;
 
     protected async override Task OnParametersSetAsync()
     {
@@ -47,6 +67,11 @@
     async Task DeleteCheckItem()
     {
         await CheckItemService.DeleteCheckItem(checkItem.CheckItemId);
+        NavigationManager.NavigateTo("/checkitem-list");
+    }
+
+    void BackToCheckItemList()
+    {
         NavigationManager.NavigateTo("/checkitem-list");
     }
 }

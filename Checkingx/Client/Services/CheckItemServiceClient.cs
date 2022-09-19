@@ -29,9 +29,10 @@ namespace Checkingx.Client.Services
             throw new Exception("Check Item not found!");
         }
 
-        public async Task CreateCheckItem(CheckItem checkItem)
+        public async Task<CheckItem> CreateCheckItem(CheckItem checkItem)
         {
             var result = await _http.PostAsJsonAsync("api/CheckItems/create", checkItem);
+            return await result.Content.ReadFromJsonAsync<CheckItem>();
         }
 
         public async Task UpdateCheckItem(CheckItem checkItem)

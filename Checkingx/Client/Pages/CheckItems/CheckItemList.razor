@@ -2,26 +2,37 @@
 @inject ICheckItemServiceClient CheckItemService
 @inject NavigationManager NavigationManager
 
-<div style="display: flex; justify-content:space-between">
-    <h3>Check Items</h3>
-    <button class="btn btn-primary" @onclick="(() => NewCheckItem())"><span class="oi oi-plus"></span></button>
+<div style="display: flex; justify-content:space-between; margin-bottom: 5px">
+    <MudText Typo="Typo.h4">Check Items</MudText>
+    <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Success" @onclick="(() => NewCheckItem())">New check item</MudButton>
 </div>
 
-<h2 class="text-center">use accordion here.</h2>
-
-@foreach (var item in CheckItemService.CheckItemList.GroupBy(x => x.Category))
-{
-    <h4>@item.Key.ToUpper()</h4>
-    <ol class="list-group">
-        @foreach (var item2 in item)
-        {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>[@item2.Priority] @item2.Title</span>
-                <span><button class="btn btn-primary" @onclick="(() => UpdateCheckItem(item2.CheckItemId))"><span class="oi oi-pencil"></span></button></span>
-            </li>
-        }
-    </ol>
-}
+<MudExpansionPanels MultiExpansion="true">
+    @foreach (var itemGroup in CheckItemService.CheckItemList.GroupBy(x => x.Category))
+    {
+        <MudExpansionPanel>
+            <TitleContent>
+                <div class="d-flex">
+                    <MudText Class="mt-1">@itemGroup.Key.ToUpper()</MudText>
+                </div>
+            </TitleContent>
+            <ChildContent>
+                <MudList Color="Color.Error">
+                    <MudListSubheader>
+                        @itemGroup.Count() item(s)
+                    </MudListSubheader>
+                    @foreach (var item in itemGroup)
+                    {
+                        <div style="display: flex; justify-content:space-between">
+                            <MudListItem>[@item.Priority] @item.Title</MudListItem>
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="(() => UpdateCheckItem(item.CheckItemId))"></MudIconButton>
+                        </div>
+                    }
+                </MudList>
+            </ChildContent>
+        </MudExpansionPanel>
+    }
+</MudExpansionPanels>
 
 
 @code {

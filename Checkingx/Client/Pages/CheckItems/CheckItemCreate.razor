@@ -2,35 +2,45 @@
 @inject ICheckItemServiceClient CheckItemService
 @inject NavigationManager NavigationManager
 
-<h3>CheckItem Create</h3>
+<div style="display: flex; justify-content:space-between; margin-bottom: 5px">
+    <MudText Typo="Typo.h4">Check Item - Create</MudText>
+    <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToCheckItemList())">Back To list</MudButton>
+</div>
 
-<EditForm Model="checkItem" OnSubmit="HandleSubmit">
-    <div>
-        <label>Title</label>
-        <InputText @bind-Value="checkItem.Title" class="form-control" required></InputText>
+<MudForm @ref="form">
+    <MudTextField T="string" Label="Title" Required="true" Variant="Variant.Filled" @bind-Value="checkItem.Title" />
+    <MudTextField T=" string" Label="Category" Required="true" Variant="Variant.Filled" @bind-Value="checkItem.Category" />
+    <MudSelect Dense="true" T="int" Label="Priority" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="checkItem.Priority" Required="true">
+        <MudSelectItem T="int" Value="1">1</MudSelectItem>
+        <MudSelectItem T="int" Value="2">2</MudSelectItem>
+        <MudSelectItem T="int" Value="3">3</MudSelectItem>
+    </MudSelect>
+    <div class="mt-2">
+        <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Success" @onclick="(() => HandleSubmit())">Submit</MudButton>
     </div>
-    <div>
-        <label>Category</label>
-        <InputText @bind-Value="checkItem.Category" class="form-control" required></InputText>
-    </div>
-    <div>
-        <label>Priority</label>
-        <InputSelect @bind-Value="checkItem.Priority" class="form-select" required>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-        </InputSelect>
-    </div>
-    <br />
-    <button type="submit" class="btn btn-primary">Submit</button>
-</EditForm>
+</MudForm>
+
 
 @code {
     CheckItem checkItem = new();
+    MudForm? form;
 
     async Task HandleSubmit()
     {
-        await CheckItemService.CreateCheckItem(checkItem);
+        var result = await CheckItemService.CreateCheckItem(checkItem);
+        Console.WriteLine(result.CheckItemId);
+        if (result.CheckItemId != 0)
+        {
+            NavigationManager.NavigateTo("/checkitem-list");
+        }
+        else
+        {
+            Console.WriteLine("something went wrong");
+        }
+    }
+
+    void BackToCheckItemList()
+    {
         NavigationManager.NavigateTo("/checkitem-list");
     }
 

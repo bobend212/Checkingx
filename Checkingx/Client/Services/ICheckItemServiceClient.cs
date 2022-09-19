@@ -8,7 +8,7 @@
 
         Task<CheckItem> GetSingleCheckItem(int checkItemId);
 
-        Task CreateCheckItem(CheckItem checkItem);
+        Task<CheckItem> CreateCheckItem(CheckItem checkItem);
 
         Task UpdateCheckItem(CheckItem checkItem);
 
