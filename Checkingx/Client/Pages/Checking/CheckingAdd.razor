@@ -1,12 +1,11 @@
 ﻿@page "/checking/new/{id:int}"
-@inject IProjectServiceClient ProjectService
+@inject ICheckItemServiceClient CheckItemService
 
 <h3>CheckingAdd</h3>
 
 
-@foreach (var item in x.GroupBy(x => x.Category))
+@foreach (var item in checkItems.GroupBy(x => x.Category))
 {
-    <hr />
     <h4>@item.Key.ToUpper()</h4>
     <table class="table table-sm" style="table-layout: fixed; word-wrap: break-word">
         <thead>
@@ -21,7 +20,7 @@
             @foreach (var checkItem in item)
             {
                 <tr>
-                    <td>@checkItem.Title</td>
+                    <td>[@checkItem.Priority] @checkItem.Title</td>
                     <td style="text-align: center"><button class="btn btn-success"><span class="oi oi-check"></span></button></td>
                     <td style="text-align: center"><button class="btn btn-danger"><span class="oi oi-x"></span></button></td>
                     <td style="text-align: center"><button class="btn btn-secondary" @onclick="(() => HandleChecking(Id, checkItem.CheckItemId))">N/A</button></td>
@@ -35,11 +34,12 @@
     [Parameter]
     public int Id { get; set; }
 
-    List<CheckItem> x = new();
+    List<CheckItem> checkItems = new();
 
     protected override async Task OnInitializedAsync()
     {
-        x = await ProjectService.ShowOnlyCheckingsNotCheckedByProject(Id);
+        await CheckItemService.GetAllCheckItems_NotChecked(Id);
+        checkItems = CheckItemService.CheckItemList;
     }
 
     async Task HandleChecking(int projectId, int checkItemId)

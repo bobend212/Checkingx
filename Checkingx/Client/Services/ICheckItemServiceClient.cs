@@ -13,5 +13,9 @@
         Task UpdateCheckItem(CheckItem checkItem);
 
         Task DeleteCheckItem(int checkItemId);
+
+        Task GetAllCheckItems_NotChecked(int projectId);
+
+        Task GetAllCheckItems_Checked(int projectId);
     }
 }

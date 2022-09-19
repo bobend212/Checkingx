@@ -23,7 +23,7 @@
 
     async Task HandleCorrect()
     {
-        checking.IsCorrected = true;
+        checking.IsFixed = true;
         await ProjectService.CorrectError(checking);
         NavigationManager.NavigateTo($"/checking/{checking.ProjectId}");
     }

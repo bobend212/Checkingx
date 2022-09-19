@@ -15,19 +15,18 @@ namespace Checkingx.Client.Services
         }
 
         public List<Project> Projects { get; set; } = new List<Project>();
-        public List<CheckItem> CheckItemList { get; set; } = new List<CheckItem>();
         public List<Checking> Checkings { get; set; } = new List<Checking>();
 
         public async Task GetProjects()
         {
-            var result = await _http.GetFromJsonAsync<List<Project>>("api/project");
+            var result = await _http.GetFromJsonAsync<List<Project>>("api/project/all");
             if (result != null)
                 Projects = result;
         }
 
-        public async Task<Project> GetSingleProject(int id)
+        public async Task<Project> GetSingleProject(int projectId)
         {
-            var result = await _http.GetFromJsonAsync<Project>($"api/project/{id}");
+            var result = await _http.GetFromJsonAsync<Project>($"api/project/single/{projectId}");
             if (result != null)
                 return result;
 
@@ -36,21 +35,17 @@ namespace Checkingx.Client.Services
 
         public async Task CreateProject(Project project)
         {
-            var result = await _http.PostAsJsonAsync("api/project", project);
-            var response = await result.Content.ReadFromJsonAsync<List<Project>>();
-            Projects = response;
+            var result = await _http.PostAsJsonAsync("api/project/create", project);
         }
 
         public async Task UpdateProject(Project project)
         {
-            var result = await _http.PutAsJsonAsync($"api/project/{project.ProjectId}", project);
-            await SetProjects(result);
+            var result = await _http.PutAsJsonAsync($"api/project/update/{project.ProjectId}", project);
         }
 
         public async Task DeleteProject(int id)
         {
-            var result = await _http.DeleteAsync($"api/project/{id}");
-            await SetProjects(result);
+            var result = await _http.DeleteAsync($"api/project/delete/{id}");
         }
 
         private async Task SetProjects(HttpResponseMessage result)
@@ -60,21 +55,8 @@ namespace Checkingx.Client.Services
             _navigationManager.NavigateTo("projects");
         }
 
-        public async Task GetAllCheckings()
-        {
-            var result = await _http.GetFromJsonAsync<List<Checking>>("api/CheckingList/checkings");
-            if (result != null)
-                Checkings = result;
-        }
 
-        public async Task<CheckItem> GetSingleCheckItem(int id)
-        {
-            var result = await _http.GetFromJsonAsync<CheckItem>($"api/CheckingList/{id}");
-            if (result != null)
-                return result;
-
-            throw new Exception("Check Item not found!");
-        }
+        //
 
         public async Task CreateCheckingItem(Checking checking)
         {
@@ -93,12 +75,6 @@ namespace Checkingx.Client.Services
         public async Task CorrectError(Checking checking)
         {
             var result = await _http.PutAsJsonAsync($"api/CheckingList/{checking.CheckingId}/correct", checking);
-        }
-
-        public async Task<List<CheckItem>> ShowOnlyCheckingsNotCheckedByProject(int projectId)
-        {
-            var result = await _http.GetFromJsonAsync<List<CheckItem>>($"api/CheckingList/show-not-checked-by-project?projectId={projectId}");
-            return result;
         }
     }
 }

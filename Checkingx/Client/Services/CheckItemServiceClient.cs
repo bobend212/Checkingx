@@ -43,5 +43,19 @@ namespace Checkingx.Client.Services
         {
             var result = await _http.DeleteAsync($"api/CheckItems/delete/{checkItemId}");
         }
+
+        public async Task GetAllCheckItems_NotChecked(int projectId)
+        {
+            var result = await _http.GetFromJsonAsync<List<CheckItem>>($"api/CheckItems/project/{projectId}/not-checked");
+            if (result != null)
+                CheckItemList = result;
+        }
+
+        public async Task GetAllCheckItems_Checked(int projectId)
+        {
+            var result = await _http.GetFromJsonAsync<List<CheckItem>>($"api/CheckItems/project/{projectId}/checked");
+            if (result != null)
+                CheckItemList = result;
+        }
     }
 }

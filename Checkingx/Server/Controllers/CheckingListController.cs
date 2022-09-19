@@ -58,19 +58,34 @@ namespace Checkingx.Server.Controllers
             return Ok(newChecking);
         }
 
-        [SwaggerOperation(Summary = "Mark as Correct, single checking entry. [IsCorrected] prop update.")]
+        [SwaggerOperation(Summary = "Mark as Fixed, single checking entry. [IsFixed] prop update. (Checker role)")]
         [HttpPut("single/correct/{checkingId}")]
-        public async Task<ActionResult<Checking>> CorrectError(CheckingCorrectDTO checking, int checkingId)
+        public async Task<ActionResult<Checking>> FixError(CheckingCorrectDTO checking, int checkingId)
         {
             var findChecking = await _context.Checking.FirstOrDefaultAsync(x => x.CheckingId == checkingId);
             if (findChecking == null)
                 return NotFound("Checking not found.");
 
-            findChecking.IsCorrected = checking.IsCorrected;
+            findChecking.IsFixed = checking.IsFixed;
 
             await _context.SaveChangesAsync();
 
             return Ok(findChecking);
         }
+
+        //[SwaggerOperation(Summary = "Mark as Correct, single checking entry. [IsCorrected] prop update. (Checker role)")]
+        //[HttpPut("single/correct/{checkingId}")]
+        //public async Task<ActionResult<Checking>> MarkAsCorrect(CheckingCorrectDTO checking, int checkingId)
+        //{
+        //    var findChecking = await _context.Checking.FirstOrDefaultAsync(x => x.CheckingId == checkingId);
+        //    if (findChecking == null)
+        //        return NotFound("Checking not found.");
+
+        //    findChecking.IsCorrected = checking.IsCorrected;
+
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok(findChecking);
+        //}
     }
 }

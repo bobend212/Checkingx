@@ -1,6 +1,7 @@
 ﻿@page "/project"
 @page "/project/{id:int}"
 @inject IProjectServiceClient ProjectService
+@inject NavigationManager NavigationManager
 
 @if (Id == null)
 {
@@ -54,10 +55,12 @@ else
     async Task HandleSubmit()
     {
         await ProjectService.UpdateProject(project);
+        NavigationManager.NavigateTo("/projects");
     }
 
     async Task DeleteProject()
     {
         await ProjectService.DeleteProject(project.ProjectId);
+        NavigationManager.NavigateTo("/projects");
     }
 }

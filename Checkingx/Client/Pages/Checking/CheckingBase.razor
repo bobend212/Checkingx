@@ -1,6 +1,6 @@
-﻿@page "/checking"
-@page "/checking/{id:int}"
+﻿@page "/checking/{id:int}"
 @inject IProjectServiceClient ProjectService
+@inject ICheckingServiceClient CheckingService
 @inject NavigationManager NavigationManager
 
 @if (checkingList.Count() > 0)
@@ -21,11 +21,11 @@
             <tbody>
                 @foreach (var checkItem in item)
                 {
-                    <tr class="@StyleForRow_IsCorrected(@checkItem.IsCorrected)">
+                    <tr class="@StyleForRow_IsCorrected(@checkItem.IsFixed)">
                         <td>@checkItem.CheckItem?.Title</td>
                         <td>@checkItem.CheckItem?.Priority</td>
                         <td>@checkItem.IsError</td>
-                        <td>@checkItem.IsCorrected</td>
+                        <td>@checkItem.IsFixed</td>
                         <td><button class="btn btn-primary" @onclick="(() => GoToCheckingDetails(checkItem.CheckingId))"><span class="oi oi-chevron-right"></span></button></td>
                     </tr>
                 }
@@ -36,6 +36,7 @@
 else
 {
     <h4>No checking found.</h4>
+    <button class="btn btn-success"@onclick="(() => GoToNewChecking(Id))">New Checking</button>
 }
 
 
@@ -46,18 +47,22 @@ else
     [Parameter]
     public int Id { get; set; }
 
-    Project project = new Project();
-    List<Checking> checkingList = new List<Checking>();
+    List<Checking> checkingList = new();
 
     protected async override Task OnParametersSetAsync()
     {
-        project = await ProjectService.GetSingleProject(Id);
-        checkingList = project.Checking;
+        await CheckingService.GetAllCheckingsByProject(Id);
+        checkingList = CheckingService.CheckingList;
     }
 
     void GoToCheckingDetails(int id)
     {
         NavigationManager.NavigateTo($"/checking/{id}/details");
+    }
+
+    void GoToNewChecking(int id)
+    {
+        NavigationManager.NavigateTo($"/checking/new/{id}");
     }
 
     private string StyleForRow_IsCorrected(bool val)

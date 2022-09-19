@@ -1,17 +1,13 @@
-﻿using System.Text.Json.Nodes;
-
-namespace Checkingx.Client.Services
+﻿namespace Checkingx.Client.Services
 {
     public interface IProjectServiceClient
     {
         List<Project> Projects { get; set; }
-
-        List<CheckItem> CheckItemList { get; set; }
         List<Checking> Checkings { get; set; }
 
         Task GetProjects();
 
-        Task<Project> GetSingleProject(int id);
+        Task<Project> GetSingleProject(int projectId);
 
         Task CreateProject(Project project);
 
@@ -19,16 +15,13 @@ namespace Checkingx.Client.Services
 
         Task DeleteProject(int id);
 
-        Task GetAllCheckings();
 
-        Task<CheckItem> GetSingleCheckItem(int id);
+        ///
 
         Task CreateCheckingItem(Checking checking);
 
         Task<Checking> GetSingleCheckingById(int id);
 
         Task CorrectError(Checking checking);
-
-        Task<List<CheckItem>> ShowOnlyCheckingsNotCheckedByProject(int projectId);
     }
 }
