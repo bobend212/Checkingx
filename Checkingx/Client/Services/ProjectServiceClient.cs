@@ -1,8 +1,5 @@
-﻿using Checkingx.Client.Pages;
-using Checkingx.Shared;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
-using System.Text.Json.Nodes;
 
 namespace Checkingx.Client.Services
 {
@@ -68,13 +65,6 @@ namespace Checkingx.Client.Services
             var result = await _http.GetFromJsonAsync<List<Checking>>("api/CheckingList/checkings");
             if (result != null)
                 Checkings = result;
-        }
-
-        public async Task GetAllCheckItems()
-        {
-            var result = await _http.GetFromJsonAsync<List<CheckItem>>("api/CheckingList/checkItems");
-            if (result != null)
-                CheckItemList = result;
         }
 
         public async Task<CheckItem> GetSingleCheckItem(int id)

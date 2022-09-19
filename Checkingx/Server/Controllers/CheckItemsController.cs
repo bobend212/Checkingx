@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
-using Checkingx.Client.Pages;
 using Checkingx.Server.Data;
 using Checkingx.Shared;
 using Checkingx.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Checkingx.Server.Controllers

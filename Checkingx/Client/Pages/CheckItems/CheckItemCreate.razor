@@ -1,0 +1,37 @@
+﻿@page "/new-checkItem"
+@inject ICheckItemServiceClient CheckItemService
+@inject NavigationManager NavigationManager
+
+<h3>CheckItem Create</h3>
+
+<EditForm Model="checkItem" OnSubmit="HandleSubmit">
+    <div>
+        <label>Title</label>
+        <InputText @bind-Value="checkItem.Title" class="form-control" required></InputText>
+    </div>
+    <div>
+        <label>Category</label>
+        <InputText @bind-Value="checkItem.Category" class="form-control" required></InputText>
+    </div>
+    <div>
+        <label>Priority</label>
+        <InputSelect @bind-Value="checkItem.Priority" class="form-select" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </InputSelect>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    CheckItem checkItem = new();
+
+    async Task HandleSubmit()
+    {
+        await CheckItemService.CreateCheckItem(checkItem);
+        NavigationManager.NavigateTo("/checkitem-list");
+    }
+
+}

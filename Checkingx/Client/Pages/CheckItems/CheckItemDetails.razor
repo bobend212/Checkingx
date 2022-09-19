@@ -1,0 +1,52 @@
+﻿@page "/checkitem/{checkItemId:int}"
+@inject ICheckItemServiceClient CheckItemService
+@inject NavigationManager NavigationManager
+
+<h3>@checkItem.Title</h3>
+<h4>@checkItem.Category</h4>
+
+<EditForm Model="checkItem" OnSubmit="HandleSubmit">
+    <div>
+        <label>Title</label>
+        <InputText @bind-Value="checkItem.Title" class="form-control" required></InputText>
+    </div>
+    <div>
+        <label>Category</label>
+        <InputText @bind-Value="checkItem.Category" class="form-control" required></InputText>
+    </div>
+    <div>
+        <label>Priority</label>
+        <InputSelect @bind-Value="checkItem.Priority" class="form-select" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </InputSelect>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Update</button>
+    <button type="button" class="btn btn-danger" @onclick="DeleteCheckItem">Delete</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int CheckItemId { get; set; }
+
+    CheckItem checkItem = new();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        checkItem = await CheckItemService.GetSingleCheckItem(CheckItemId);
+    }
+
+    async Task HandleSubmit()
+    {
+        await CheckItemService.UpdateCheckItem(checkItem);
+        NavigationManager.NavigateTo("/checkitem-list");
+    }
+
+    async Task DeleteCheckItem()
+    {
+        await CheckItemService.DeleteCheckItem(checkItem.CheckItemId);
+        NavigationManager.NavigateTo("/checkitem-list");
+    }
+}

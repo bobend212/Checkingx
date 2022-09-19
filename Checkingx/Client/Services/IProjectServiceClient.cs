@@ -20,7 +20,6 @@ namespace Checkingx.Client.Services
         Task DeleteProject(int id);
 
         Task GetAllCheckings();
-        Task GetAllCheckItems();
 
         Task<CheckItem> GetSingleCheckItem(int id);
 

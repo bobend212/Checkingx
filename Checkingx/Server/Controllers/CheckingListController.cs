@@ -27,6 +27,7 @@ namespace Checkingx.Server.Controllers
         {
             return Ok(await _context.Checking.ToListAsync());
         }
+
         [SwaggerOperation(Summary = "Return all checkings by project Id.")]
         [HttpGet("all/project/{projectId}")]
         public async Task<ActionResult<List<Checking>>> GetAllCheckingsByProjectId(int projectId)

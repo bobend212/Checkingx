@@ -1,0 +1,42 @@
+﻿@page "/checkitem-list"
+@inject ICheckItemServiceClient CheckItemService
+@inject NavigationManager NavigationManager
+
+<div style="display: flex; justify-content:space-between">
+    <h3>Check Items</h3>
+    <button class="btn btn-primary" @onclick="(() => NewCheckItem())"><span class="oi oi-plus"></span></button>
+</div>
+
+
+@foreach (var item in CheckItemService.CheckItemList.GroupBy(x => x.Category))
+{
+    <hr />
+    <h4>@item.Key.ToUpper()</h4>
+    <ol class="list-group">
+        @foreach (var item2 in item)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>[@item2.Priority] @item2.Title</span>
+                <span><button class="btn btn-primary" @onclick="(() => UpdateCheckItem(item2.CheckItemId))"><span class="oi oi-pencil"></span></button></span>
+            </li>
+        }
+    </ol>
+}
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckItemService.GetAllCheckItems();
+    }
+
+    void NewCheckItem()
+    {
+        NavigationManager.NavigateTo("/new-checkItem");
+    }
+
+    void UpdateCheckItem(int checkItemId)
+    {
+        NavigationManager.NavigateTo($"/checkitem/{checkItemId}");
+    }
+}
