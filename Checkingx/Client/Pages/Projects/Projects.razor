@@ -15,7 +15,8 @@
                 <th></th>
                 <th>(id) Project</th>
                 <th>Checking Priority</th>
-                <th>Errors Found</th>
+                <th>Errors / Fixed / NA</th>
+                <th>Correct</th>
                 <th></th>
                 <th></th>
             </tr>
@@ -27,7 +28,8 @@
                     <td><button class="btn btn-primary" @onclick="(() => EditProject(project.ProjectId))"><span class="oi oi-pencil"></span></button></td>
                     <td>(@project.ProjectId) @project.Number @project.Name</td>
                     <td>@project.CheckingPriority</td>
-                    <td>@project.Checking.Where(x => x.IsError).Count()</td>
+                    <td>@project.Checking.Where(x => x.IsError).Count() / @project.Checking.Where(x => x.IsFixed).Count() / @project.Checking.Where(x => x.IsNA).Count()</td>
+                    <td>@project.Checking.Where(x => x.IsError == false && x.IsFixed == false && x.IsNA == false).Count()</td>
                     <td><button class="btn btn-success" @onclick="(() => GoToChecking(project.ProjectId))">Open Checking</button></td>
                     <td><button class="btn btn-primary" @onclick="(() => GoToCheckingNew(project.ProjectId))">Add Checking</button></td>
                 </tr>

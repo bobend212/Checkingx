@@ -20,8 +20,6 @@
 
         Task CreateCheckingItem(Checking checking);
 
-        Task<Checking> GetSingleCheckingById(int id);
-
         Task FixError(Checking checking);
     }
 }

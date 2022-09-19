@@ -1,5 +1,5 @@
 ﻿@page "/checking/{id:int}/details"
-@inject IProjectServiceClient ProjectService
+@inject ICheckingServiceClient CheckingService
 @inject NavigationManager NavigationManager
 
 <div class="card">
@@ -18,13 +18,13 @@
 
     protected async override Task OnParametersSetAsync()
     {
-        checking = await ProjectService.GetSingleCheckingById(Id);
+        checking = await CheckingService.GetSingleChecking(Id);
     }
 
     async Task HandleCorrect()
     {
         checking.IsFixed = true;
-        await ProjectService.FixError(checking);
+        await CheckingService.FixError(checking);
         NavigationManager.NavigateTo($"/checking/{checking.ProjectId}");
     }
 

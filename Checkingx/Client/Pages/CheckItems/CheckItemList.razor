@@ -7,10 +7,10 @@
     <button class="btn btn-primary" @onclick="(() => NewCheckItem())"><span class="oi oi-plus"></span></button>
 </div>
 
+<h2 class="text-center">use accordion here.</h2>
 
 @foreach (var item in CheckItemService.CheckItemList.GroupBy(x => x.Category))
 {
-    <hr />
     <h4>@item.Key.ToUpper()</h4>
     <ol class="list-group">
         @foreach (var item2 in item)

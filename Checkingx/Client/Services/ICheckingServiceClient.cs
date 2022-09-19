@@ -6,6 +6,10 @@
 
         Task GetAllCheckingsByProject(int projectId);
 
+        Task<Checking> GetSingleChecking(int checkingId);
+
         Task CreateCheckingItem(Checking checking);
+
+        Task FixError(Checking checking);
     }
 }

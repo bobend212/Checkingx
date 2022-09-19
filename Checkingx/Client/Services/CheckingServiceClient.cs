@@ -1,6 +1,4 @@
-﻿using Checkingx.Client.Pages.CheckItems;
-using Checkingx.Shared;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 
 namespace Checkingx.Client.Services
 {
@@ -14,6 +12,7 @@ namespace Checkingx.Client.Services
         }
 
         public List<Checking> CheckingList { get; set; } = new();
+
         public async Task GetAllCheckingsByProject(int projectId)
         {
             var result = await _http.GetFromJsonAsync<List<Checking>>($"api/CheckingList/all/project/{projectId}");
@@ -21,11 +20,23 @@ namespace Checkingx.Client.Services
                 CheckingList = result;
         }
 
+        public async Task<Checking> GetSingleChecking(int checkingId)
+        {
+            var result = await _http.GetFromJsonAsync<Checking>($"api/CheckingList/single/{checkingId}");
+            if (result != null)
+                return result;
+
+            throw new Exception("Checking not found!");
+        }
+
         public async Task CreateCheckingItem(Checking checking)
         {
             var result = await _http.PostAsJsonAsync("api/CheckingList/create", checking);
         }
 
-
+        public async Task FixError(Checking checking)
+        {
+            var result = await _http.PutAsJsonAsync($"api/CheckingList/single/fix/{checking.CheckingId}", checking);
+        }
     }
 }

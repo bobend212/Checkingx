@@ -1,0 +1,40 @@
+﻿@page "/error-report/{projectId:int}/{checkItemId:int}"
+@inject ICheckingServiceClient CheckingService
+@inject NavigationManager NavigationManager
+
+<h3>CheckingReportErrorView</h3>
+
+<p>@ProjectId</p>
+<p>@CheckItemId</p>
+
+
+<EditForm Model="newChecking" OnSubmit="MarkAsError">
+    <div>
+        <label>Description</label>
+        <InputTextArea @bind-Value="newChecking.Description" class="form-control" required rows="3"></InputTextArea>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-danger">Report</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int ProjectId { get; set; }
+
+    [Parameter]
+    public int CheckItemId { get; set; }
+
+    Checking newChecking = new();
+
+    async Task MarkAsError()
+    {
+        newChecking.ProjectId = ProjectId;
+        newChecking.CheckItemId = CheckItemId;
+        newChecking.IsError = true;
+        newChecking.IsFixed = false;
+        newChecking.IsNA = false;
+
+        await CheckingService.CreateCheckingItem(newChecking);
+        NavigationManager.NavigateTo($"/checking/new/{ProjectId}");
+    }
+}

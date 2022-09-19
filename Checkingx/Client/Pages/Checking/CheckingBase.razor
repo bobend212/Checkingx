@@ -3,7 +3,7 @@
 @inject ICheckingServiceClient CheckingService
 @inject NavigationManager NavigationManager
 
-@if (checkingList.Count() > 0)
+@if (checkingList.Where(x => x.IsError).Count() > 0)
 {
     @foreach (var item in checkingList.Where(x => x.IsError).GroupBy(x => x.CheckItem?.Category))
     {
@@ -35,8 +35,8 @@
 }
 else
 {
-    <h4>No checking found.</h4>
-    <button class="btn btn-success"@onclick="(() => GoToNewChecking(Id))">New Checking</button>
+    <h4>No errors found.</h4>
+    <button class="btn btn-success"@onclick="(() => GoToNewChecking(Id))">Start Checking</button>
 }
 
 

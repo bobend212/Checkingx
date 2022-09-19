@@ -63,15 +63,6 @@ namespace Checkingx.Client.Services
             var result = await _http.PostAsJsonAsync("api/CheckingList/check-item-add", checking);
         }
 
-        public async Task<Checking> GetSingleCheckingById(int id)
-        {
-            var result = await _http.GetFromJsonAsync<Checking>($"api/CheckingList/checking/{id}");
-            if (result != null)
-                return result;
-
-            throw new Exception("Checking not found!");
-        }
-
         public async Task FixError(Checking checking)
         {
             var result = await _http.PutAsJsonAsync($"api/CheckingList/single/fix/{checking.CheckingId}", checking);
