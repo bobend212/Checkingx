@@ -1,7 +1,10 @@
-﻿using Checkingx.Server.Data;
+﻿using AutoMapper;
+using Checkingx.Server.Data;
 using Checkingx.Shared;
+using Checkingx.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Checkingx.Server.Controllers
 {
@@ -10,63 +13,73 @@ namespace Checkingx.Server.Controllers
     public class ProjectController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public ProjectController(DataContext context)
+        public ProjectController(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<List<Project>>> AddProject(Project project)
-        {
-            _context.Projects.Add(project);
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.Projects.ToListAsync());
-        }
-
-        [HttpGet]
+        [SwaggerOperation(Summary = "Return all projects (include checkings and check items).")]
+        [HttpGet("all")]
         public async Task<ActionResult<List<Project>>> GetAllProjects()
         {
             return Ok(await _context.Projects.Include(x => x.Checking).ThenInclude(x => x.CheckItem).ToListAsync());
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Project>> GetProject(int id)
+        [SwaggerOperation(Summary = "Return single project (include checkings and check items).")]
+        [HttpGet("single/{projectId}")]
+        public async Task<ActionResult<Project>> GetProject(int projectId)
         {
-            var findProject = await _context.Projects.Include(x => x.Checking).ThenInclude(x => x.CheckItem).FirstOrDefaultAsync(x => x.ProjectId == id);
+            var findProject = await _context.Projects.Include(x => x.Checking).ThenInclude(x => x.CheckItem).FirstOrDefaultAsync(x => x.ProjectId == projectId);
             if (findProject == null) return NotFound("Project not found.");
 
             return Ok(findProject);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<List<Project>>> UpdateProject(Project project, int id)
+        [SwaggerOperation(Summary = "Create new project.")]
+        [HttpPost("create")]
+        public async Task<ActionResult<Project>> AddProject(ProjectCreateDTO projectDto)
         {
-            var dbProject = await _context.Projects.FirstOrDefaultAsync(x => x.ProjectId == id);
+            var newProject = _mapper.Map<Project>(projectDto);
+            _context.Projects.Add(newProject);
+            await _context.SaveChangesAsync();
+
+            return Ok(newProject);
+        }
+
+        [SwaggerOperation(Summary = "Update project.")]
+        [HttpPut("update/{projectId}")]
+        public async Task<ActionResult<Project>> UpdateProject(ProjectUpdateDTO projectDto, int projectId)
+        {
+            var dbProject = await _context.Projects.FirstOrDefaultAsync(x => x.ProjectId == projectId);
             if (dbProject == null)
                 return NotFound("Project not found.");
 
-            dbProject.Number = project.Number;
-            dbProject.Name = project.Name;
-            dbProject.CheckingPriority = project.CheckingPriority;
+            dbProject.Number = projectDto.Number;
+            dbProject.Name = projectDto.Name;
+            dbProject.CheckingPriority = projectDto.CheckingPriority;
 
+            var updateProject = _mapper.Map(projectDto, dbProject);
+            _context.Entry(dbProject).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Projects.ToListAsync());
+            return Ok(updateProject);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Project>>> DeleteProject(int id)
+        [SwaggerOperation(Summary = "Remove project.")]
+        [HttpDelete("delete/{projectId}")]
+        public async Task<ActionResult> DeleteProject(int projectId)
         {
-            var dbProject = await _context.Projects.FirstOrDefaultAsync(x => x.ProjectId == id);
+            var dbProject = await _context.Projects.FirstOrDefaultAsync(x => x.ProjectId == projectId);
             if (dbProject == null)
                 return NotFound("Project not found.");
 
             _context.Projects.Remove(dbProject);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Projects.ToListAsync());
+            return Ok();
         }
     }
 }
