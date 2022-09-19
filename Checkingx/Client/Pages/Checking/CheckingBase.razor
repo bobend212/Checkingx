@@ -5,7 +5,7 @@
 
 @if (checkingList.Count() > 0)
 {
-    @foreach (var item in checkingList.GroupBy(x => x.CheckItem?.Category))
+    @foreach (var item in checkingList.Where(x => x.IsError).GroupBy(x => x.CheckItem?.Category))
     {
         <h4>@item.Key (@item.Count()) errors found</h4>
         <table class="table table-sm">

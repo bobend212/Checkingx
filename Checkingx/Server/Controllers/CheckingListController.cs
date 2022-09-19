@@ -58,8 +58,8 @@ namespace Checkingx.Server.Controllers
             return Ok(newChecking);
         }
 
-        [SwaggerOperation(Summary = "Mark as Fixed, single checking entry. [IsFixed] prop update. (Checker role)")]
-        [HttpPut("single/correct/{checkingId}")]
+        [SwaggerOperation(Summary = "Mark as Fixed, single checking entry. [IsFixed] prop update. (post-Checker/designer role)")]
+        [HttpPut("single/fix/{checkingId}")]
         public async Task<ActionResult<Checking>> FixError(CheckingCorrectDTO checking, int checkingId)
         {
             var findChecking = await _context.Checking.FirstOrDefaultAsync(x => x.CheckingId == checkingId);
@@ -73,19 +73,21 @@ namespace Checkingx.Server.Controllers
             return Ok(findChecking);
         }
 
-        //[SwaggerOperation(Summary = "Mark as Correct, single checking entry. [IsCorrected] prop update. (Checker role)")]
-        //[HttpPut("single/correct/{checkingId}")]
-        //public async Task<ActionResult<Checking>> MarkAsCorrect(CheckingCorrectDTO checking, int checkingId)
-        //{
-        //    var findChecking = await _context.Checking.FirstOrDefaultAsync(x => x.CheckingId == checkingId);
-        //    if (findChecking == null)
-        //        return NotFound("Checking not found.");
+        [SwaggerOperation(Summary = "Mark as Correct, single checking entry. [IsError] prop update. (Checker role)")]
+        [HttpPost("single/correct")]
+        public async Task<ActionResult<Checking>> MarkAsCorrect(Checking checking)
+        {
+            var findChecking = await _context.Checking.FirstOrDefaultAsync(x => x.CheckingId == checking.CheckingId);
+            if (findChecking == null)
+                return NotFound("Checking not found.");
 
-        //    findChecking.IsCorrected = checking.IsCorrected;
+            findChecking.IsError = checking.IsError;
+            findChecking.IsFixed = checking.IsFixed;
+            findChecking.IsNA = checking.IsNA;
 
-        //    await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-        //    return Ok(findChecking);
-        //}
+            return Ok(findChecking);
+        }
     }
 }

@@ -72,9 +72,9 @@ namespace Checkingx.Client.Services
             throw new Exception("Checking not found!");
         }
 
-        public async Task CorrectError(Checking checking)
+        public async Task FixError(Checking checking)
         {
-            var result = await _http.PutAsJsonAsync($"api/CheckingList/{checking.CheckingId}/correct", checking);
+            var result = await _http.PutAsJsonAsync($"api/CheckingList/single/fix/{checking.CheckingId}", checking);
         }
     }
 }

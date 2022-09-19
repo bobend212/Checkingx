@@ -1,33 +1,40 @@
 ﻿@page "/checking/new/{id:int}"
 @inject ICheckItemServiceClient CheckItemService
+@inject ICheckingServiceClient CheckingService
 
 <h3>CheckingAdd</h3>
 
-
-@foreach (var item in checkItems.GroupBy(x => x.Category))
+@if (checkItems.Count > 0)
 {
-    <h4>@item.Key.ToUpper()</h4>
-    <table class="table table-sm" style="table-layout: fixed; word-wrap: break-word">
-        <thead>
-            <tr>
-                <th style="width: 75%; text-align: left">Title</th>
-                <th style="text-align: center">Correct</th>
-                <th style="text-align: center">Incorrect</th>
-                <th style="text-align: center">Not Applicable</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var checkItem in item)
-            {
+    @foreach (var item in checkItems.GroupBy(x => x.Category))
+    {
+        <h4>@item.Key.ToUpper()</h4>
+        <table class="table table-sm" style="table-layout: fixed; word-wrap: break-word">
+            <thead>
                 <tr>
-                    <td>[@checkItem.Priority] @checkItem.Title</td>
-                    <td style="text-align: center"><button class="btn btn-success"><span class="oi oi-check"></span></button></td>
-                    <td style="text-align: center"><button class="btn btn-danger"><span class="oi oi-x"></span></button></td>
-                    <td style="text-align: center"><button class="btn btn-secondary" @onclick="(() => HandleChecking(Id, checkItem.CheckItemId))">N/A</button></td>
+                    <th style="width: 75%; text-align: left">Title</th>
+                    <th style="text-align: center">Correct</th>
+                    <th style="text-align: center">Incorrect</th>
+                    <th style="text-align: center">Not Applicable</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var checkItem in item)
+                {
+                    <tr>
+                        <td>[@checkItem.Priority] @checkItem.Title</td>
+                        <td style="text-align: center"><button class="btn btn-success" @onclick="(() => MarkAsCorrectOrNA(checkItem.CheckItemId, false, false))"><span class="oi oi-check"></span></button></td>
+                        <td style="text-align: center"><button class="btn btn-danger"><span class="oi oi-x"></span></button></td>
+                        <td style="text-align: center"><button class="btn btn-secondary" @onclick="(() => MarkAsCorrectOrNA(checkItem.CheckItemId, false, true))">N/A</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+else
+{
+    <h4 class="text-center">Nothing to check.</h4>
 }
 
 @code {
@@ -35,9 +42,25 @@
     public int Id { get; set; }
 
     List<CheckItem> checkItems = new();
+    Checking newChecking = new();
 
     protected override async Task OnInitializedAsync()
     {
+        await CheckItemService.GetAllCheckItems_NotChecked(Id);
+        checkItems = CheckItemService.CheckItemList;
+    }
+
+    async Task MarkAsCorrectOrNA(int checkItemId, bool isErrValue, bool isNAValue)
+    {
+        newChecking.ProjectId = Id;
+        newChecking.CheckItemId = checkItemId;
+        newChecking.Description = string.Empty;
+        newChecking.IsError = isErrValue;
+        newChecking.IsFixed = false;
+        newChecking.IsNA = isNAValue;
+
+        await CheckingService.CreateCheckingItem(newChecking);
+
         await CheckItemService.GetAllCheckItems_NotChecked(Id);
         checkItems = CheckItemService.CheckItemList;
     }

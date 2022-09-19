@@ -24,7 +24,7 @@
     async Task HandleCorrect()
     {
         checking.IsFixed = true;
-        await ProjectService.CorrectError(checking);
+        await ProjectService.FixError(checking);
         NavigationManager.NavigateTo($"/checking/{checking.ProjectId}");
     }
 

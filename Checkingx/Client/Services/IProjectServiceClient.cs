@@ -22,6 +22,6 @@
 
         Task<Checking> GetSingleCheckingById(int id);
 
-        Task CorrectError(Checking checking);
+        Task FixError(Checking checking);
     }
 }
