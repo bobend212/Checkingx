@@ -39,7 +39,7 @@
 
     async Task HandleCorrect()
     {
-        checking.IsFixed = true;
+        checking.Status = "fixed";
         await CheckingService.FixError(checking);
         Toaster.Success("Error reviewed");
         NavigationManager.NavigateTo($"/checking/{checking.ProjectId}");

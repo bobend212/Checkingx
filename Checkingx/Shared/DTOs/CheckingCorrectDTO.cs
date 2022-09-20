@@ -2,6 +2,6 @@
 {
     public class CheckingCorrectDTO
     {
-        public bool IsFixed { get; set; }
+        public string Status { get; set; }
     }
 }

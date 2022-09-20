@@ -8,9 +8,7 @@
         public CheckItem? CheckItem { get; set; }
         public int CheckItemId { get; set; }
         public string? Description { get; set; }
-        public bool IsError { get; set; }
-        public bool IsFixed { get; set; }
-        public bool IsNA { get; set; }
+        public string Status { get; set; } = string.Empty;
 
         public List<Image> Images { get; set; } = new List<Image>();
     }

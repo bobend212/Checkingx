@@ -66,7 +66,7 @@ namespace Checkingx.Server.Controllers
             if (findChecking == null)
                 return NotFound("Checking not found.");
 
-            findChecking.IsFixed = checking.IsFixed;
+            findChecking.Status = checking.Status;
 
             await _context.SaveChangesAsync();
 
@@ -81,9 +81,7 @@ namespace Checkingx.Server.Controllers
             if (findChecking == null)
                 return NotFound("Checking not found.");
 
-            findChecking.IsError = checking.IsError;
-            findChecking.IsFixed = checking.IsFixed;
-            findChecking.IsNA = checking.IsNA;
+            findChecking.Status = checking.Status;
 
             await _context.SaveChangesAsync();
 

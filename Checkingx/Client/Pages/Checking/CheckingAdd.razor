@@ -9,10 +9,10 @@
     <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToProjects())">Back</MudButton>
 </div>
 <hr />
-@if (checkItems.Where(x => x.Priority == project.CheckingPriority).Count() > 0)
+@if (checkItems.Count() > 0)
 {
     <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary">
-        @foreach (var item in checkItems.Where(x => x.Priority == project.CheckingPriority).GroupBy(x => x.Category))
+        @foreach (var item in checkItems.GroupBy(x => x.Category))
         {
             <MudTabPanel Text="@item.Key.ToUpper()">
                 <MudTable Items="@item" Hover="true" Dense="true" Class="mt-2">
@@ -24,9 +24,9 @@
                     </HeaderContent>
                     <RowTemplate>
                         <MudTd>[@context.Priority] @context.Title</MudTd>
-                        <MudTd Style="text-align:center"><MudIconButton Icon="@Icons.Material.Outlined.CheckBox" Variant="Variant.Filled" Color="Color.Success" Size="Size.Medium" @onclick="(() => MarkAsCorrectOrNA(context.CheckItemId, false, false))" /></MudTd>
-                        <MudTd Style="text-align:center"><MudIconButton Icon="@Icons.Outlined.DisabledByDefault" Variant="Variant.Filled" Color="Color.Error" Size="Size.Medium" @onclick="(() => ErrorReport(ProjectId, context.CheckItemId))" /></MudTd>
-                        <MudTd Style="text-align:center"><MudIconButton Icon="@Icons.Outlined.CheckBoxOutlineBlank" Variant="Variant.Outlined" Color="Color.Info" Size="Size.Medium" @onclick="(() => MarkAsCorrectOrNA(context.CheckItemId, false, true))" /></MudTd>
+                        <MudTd Style="text-align:center"><MudIconButton Icon="@Icons.Material.Outlined.CheckBox" Variant="Variant.Filled" Color="Color.Success" Size="Size.Medium" @onclick="@(() => MarkAsCorrectOrNA(context.CheckItemId, "ok"))" /></MudTd>
+                        <MudTd Style="text-align:center"><MudIconButton Icon="@Icons.Outlined.DisabledByDefault" Variant="Variant.Filled" Color="Color.Error" Size="Size.Medium" @onclick="@(() => ErrorReport(ProjectId, context.CheckItemId))" /></MudTd>
+                        <MudTd Style="text-align:center"><MudIconButton Icon="@Icons.Outlined.CheckBoxOutlineBlank" Variant="Variant.Outlined" Color="Color.Info" Size="Size.Medium" @onclick="@(() => MarkAsCorrectOrNA(context.CheckItemId, "n/a"))" /></MudTd>
                     </RowTemplate>
                 </MudTable>
             </MudTabPanel>
@@ -52,14 +52,12 @@ else
         checkItems = CheckItemService.CheckItemList;
     }
 
-    async Task MarkAsCorrectOrNA(int checkItemId, bool isErrValue, bool isNAValue)
+    async Task MarkAsCorrectOrNA(int checkItemId, string statusValue)
     {
         newChecking.ProjectId = ProjectId;
         newChecking.CheckItemId = checkItemId;
         newChecking.Description = string.Empty;
-        newChecking.IsError = isErrValue;
-        newChecking.IsFixed = false;
-        newChecking.IsNA = isNAValue;
+        newChecking.Status = statusValue;
 
         await CheckingService.CreateCheckingItem(newChecking);
 

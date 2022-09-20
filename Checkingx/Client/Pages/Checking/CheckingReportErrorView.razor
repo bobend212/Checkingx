@@ -61,9 +61,7 @@
     {
         newChecking.ProjectId = ProjectId;
         newChecking.CheckItemId = CheckItemId;
-        newChecking.IsError = true;
-        newChecking.IsFixed = false;
-        newChecking.IsNA = false;
+        newChecking.Status = "error";
         newChecking.Images = imagesList;
 
         await CheckingService.CreateCheckingItem(newChecking);
