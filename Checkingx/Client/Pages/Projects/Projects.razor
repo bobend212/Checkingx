@@ -30,8 +30,8 @@
                     <td>@project.CheckingPriority</td>
                     <td>@project.Checking.Where(x => x.Status == "error").Count() / @project.Checking.Where(x => x.Status == "fixed").Count() / @project.Checking.Where(x => x.Status == "n/a").Count()</td>
                     <td>@project.Checking.Where(x => x.Status == "ok").Count()</td>
-                    <td><button class="btn btn-success" @onclick="(() => GoToChecking(project.ProjectId))">Open Checking</button></td>
-                    <td><button class="btn btn-primary" @onclick="(() => GoToCheckingNew(project.ProjectId))">Add Checking</button></td>
+                    <td><button class="btn btn-success" @onclick="(() => GoToChecking(project.ProjectId))">Checking Review</button></td>
+                    <td><button class="btn btn-primary" @onclick="(() => GoToCheckingNew(project.ProjectId))">Checking</button></td>
                 </tr>
             }
         </tbody>

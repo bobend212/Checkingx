@@ -4,7 +4,10 @@
 @inject Sotsera.Blazor.Toaster.IToaster Toaster
 
 <div class="card">
-    <h5 class="card-header">Error Description</h5>
+    <div class="@CardHeaderStyle(@checking.Status)" style="display: flex; justify-content: space-between">
+        <h5>Error Description</h5>
+        <h5>status: @checking.Status</h5>
+    </div>
     <div class="card-body">
         <h5 class="card-title">@checking.Description</h5>
         <div>
@@ -21,7 +24,10 @@
         </div>
         <div style="display: flex; justify-content: space-between">
             <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToList())">Back to list</MudButton>
-            <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Success" @onclick="(() => HandleCorrect())">Review & Close</MudButton>
+            @if (checking.Status == "error")
+            {
+                <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Tertiary" @onclick="(() => HandleCorrect())">Review & Close</MudButton>
+            }
         </div>
     </div>
 </div>
@@ -48,6 +54,13 @@
     void BackToList()
     {
         NavigationManager.NavigateTo($"/checking/{checking.ProjectId}");
+    }
+
+    private string CardHeaderStyle(string statusValue)
+    {
+        if (statusValue == "fixed") return "card-header bg-success text-white";
+        if (statusValue == "error") return "card-header bg-danger text-white";
+        return "card-header";
     }
 
 }

@@ -3,6 +3,7 @@
 @inject ICheckingServiceClient CheckingService
 @inject IProjectServiceClient ProjectService
 @inject NavigationManager NavigationManager
+@inject Sotsera.Blazor.Toaster.IToaster Toaster
 
 <div style="display: flex; justify-content:space-between; margin-bottom: 5px">
     <MudText Typo="Typo.h5">Checking</MudText>
@@ -60,9 +61,9 @@ else
         newChecking.Status = statusValue;
 
         await CheckingService.CreateCheckingItem(newChecking);
-
         await CheckItemService.GetAllCheckItems_NotChecked(ProjectId);
         checkItems = CheckItemService.CheckItemList;
+        Toaster.Info($"status: {statusValue}");
     }
 
     void ErrorReport(int projectId, int checkItemId)
