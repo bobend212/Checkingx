@@ -1,6 +1,7 @@
 ﻿@page "/checking/{id:int}/details"
 @inject ICheckingServiceClient CheckingService
 @inject NavigationManager NavigationManager
+@inject Sotsera.Blazor.Toaster.IToaster Toaster
 
 <div class="card">
     <h5 class="card-header">Error Description</h5>
@@ -18,7 +19,10 @@
                 </MudCarousel>
             }
         </div>
-        <button class="btn btn-success" @onclick="(() => HandleCorrect())">Correct</button>
+        <div style="display: flex; justify-content: space-between">
+            <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToList())">Back to list</MudButton>
+            <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Success" @onclick="(() => HandleCorrect())">Review & Close</MudButton>
+        </div>
     </div>
 </div>
 
@@ -37,9 +41,13 @@
     {
         checking.IsFixed = true;
         await CheckingService.FixError(checking);
+        Toaster.Success("Error reviewed");
         NavigationManager.NavigateTo($"/checking/{checking.ProjectId}");
     }
 
-
+    void BackToList()
+    {
+        NavigationManager.NavigateTo($"/checking/{checking.ProjectId}");
+    }
 
 }
