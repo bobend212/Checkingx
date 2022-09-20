@@ -3,40 +3,32 @@
 @inject ICheckingServiceClient CheckingService
 @inject NavigationManager NavigationManager
 
-<h3>CheckingAdd</h3>
+<div style="display: flex; justify-content:space-between; margin-bottom: 5px">
+    <MudText Typo="Typo.h4">Checking Process</MudText>
+    <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToProjects())">Back</MudButton>
+</div>
 
-@if (checkItems.Count > 0)
-{
+<MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary">
     @foreach (var item in checkItems.GroupBy(x => x.Category))
     {
-        <h4>@item.Key.ToUpper()</h4>
-        <table class="table table-sm" style="table-layout: fixed; word-wrap: break-word">
-            <thead>
-                <tr>
-                    <th style="width: 75%; text-align: left">Title</th>
-                    <th style="text-align: center">Correct</th>
-                    <th style="text-align: center">Incorrect</th>
-                    <th style="text-align: center">Not Applicable</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var checkItem in item)
-                {
-                    <tr>
-                        <td>[@checkItem.Priority] @checkItem.Title</td>
-                        <td style="text-align: center"><button class="btn btn-success" @onclick="(() => MarkAsCorrectOrNA(checkItem.CheckItemId, false, false))"><span class="oi oi-check"></span></button></td>
-                        <td style="text-align: center"><button class="btn btn-danger" @onclick="(() => ErrorReport(ProjectId, checkItem.CheckItemId))"><span class="oi oi-x"></span></button></td>
-                        <td style="text-align: center"><button class="btn btn-secondary" @onclick="(() => MarkAsCorrectOrNA(checkItem.CheckItemId, false, true))">N/A</button></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <MudTabPanel Text="@item.Key.ToUpper()">
+            <MudTable Items="@item" Hover="true" Dense="true" Class="mt-2">
+                <HeaderContent>
+                    <MudTh>Title</MudTh>
+                    <MudTh Style="text-align:center">Correct</MudTh>
+                    <MudTh Style="text-align:center">Incorrect</MudTh>
+                    <MudTh Style="text-align:center">N/A</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Title</MudTd>
+                    <MudTd Style="text-align:center"><MudIconButton Icon="@Icons.Material.Outlined.CheckBox" Variant="Variant.Filled" Color="Color.Success" Size="Size.Medium" @onclick="(() => MarkAsCorrectOrNA(context.CheckItemId, false, false))" /></MudTd>
+                    <MudTd Style="text-align:center"><MudIconButton Icon="@Icons.Outlined.DisabledByDefault" Variant="Variant.Filled" Color="Color.Error" Size="Size.Medium" @onclick="(() => ErrorReport(ProjectId, context.CheckItemId))" /></MudTd>
+                    <MudTd Style="text-align:center"><MudIconButton Icon="@Icons.Outlined.CheckBoxOutlineBlank" Variant="Variant.Outlined" Color="Color.Info" Size="Size.Medium" @onclick="(() => MarkAsCorrectOrNA(context.CheckItemId, false, true))" /></MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudTabPanel>
     }
-}
-else
-{
-    <h4 class="text-center">Nothing to check.</h4>
-}
+</MudTabs>
 
 @code {
     [Parameter]
@@ -69,6 +61,11 @@ else
     void ErrorReport(int projectId, int checkItemId)
     {
         NavigationManager.NavigateTo($"/error-report/{projectId}/{checkItemId}");
+    }
+
+    void BackToProjects()
+    {
+        NavigationManager.NavigateTo("/projects");
     }
 
 

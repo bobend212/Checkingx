@@ -2,13 +2,13 @@
 @inject ICheckingServiceClient CheckingService
 @inject NavigationManager NavigationManager
 
-<h3>CheckingReportErrorView</h3>
+<div style="display: flex; justify-content:space-between; margin-bottom: 5px">
+    <MudText Typo="Typo.h4">Checking Process - Error Report</MudText>
+    <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToChecking())">Back to checking</MudButton>
+</div>
 
-<p>@ProjectId</p>
-<p>@CheckItemId</p>
 
-
-<EditForm Model="newChecking" OnSubmit="MarkAsError">
+@*<EditForm Model="newChecking" OnSubmit="MarkAsError">
     <div>
         <label>Description</label>
         <InputTextArea @bind-Value="newChecking.Description" class="form-control" required rows="3"></InputTextArea>
@@ -24,7 +24,35 @@
     </div>
     <br />
     <button type="submit" class="btn btn-danger">Report</button>
-</EditForm>
+</EditForm>*@
+
+<MudForm @ref="form">
+    <MudTextField T="string" Label="Description" Variant="Variant.Filled" @bind-Value="@newChecking.Description" Lines="3" />
+    <InputFile id="fileInput112" OnChange="OnFileChange" hidden multiple accept=".jpg, .jpeg, .png" />
+
+    <div class="mt-2" style="display: flex; justify-content: space-between">
+        <div>
+    <MudButton HtmlTag="label"
+               Variant="Variant.Filled"
+               Color="Color.Primary"
+               StartIcon="@Icons.Filled.CloudUpload"
+               for="fileInput112"
+               Class="mt-2">
+        Upload images
+    </MudButton>
+        </div>
+    <div>
+        @foreach (var image in imagesList)
+        {
+            <img class="mr-1" src="@image.Data" width="100" height="100" />
+        }
+    </div>
+
+    <div>
+        <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Error" @onclick="(() => MarkAsError())">Report</MudButton>
+    </div>
+    </div>
+</MudForm>
 
 
 
@@ -37,6 +65,7 @@
 
     Checking newChecking = new();
     List<Image> imagesList = new();
+    MudForm? form;
 
     async Task MarkAsError()
     {
@@ -62,5 +91,10 @@
             var imageData = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
             imagesList.Add(new Image { Data = imageData });
         }
+    }
+
+    void BackToChecking()
+    {
+        NavigationManager.NavigateTo($"/checking/new/{ProjectId}");
     }
 }
