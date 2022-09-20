@@ -3,9 +3,10 @@
 @inject NavigationManager NavigationManager
 
 <div style="display: flex; justify-content:space-between; margin-bottom: 5px">
-    <MudText Typo="Typo.h4">Check Item - Create</MudText>
-    <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToCheckItemList())">Back To list</MudButton>
+    <MudText Typo="Typo.h5">Check Item - New</MudText>
+    <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToCheckItemList())">Back</MudButton>
 </div>
+<hr />
 
 <MudForm @ref="form">
     <MudTextField T="string" Label="Title" Required="true" Variant="Variant.Filled" @bind-Value="checkItem.Title" />

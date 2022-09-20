@@ -2,7 +2,7 @@
 @inject IProjectServiceClient ProjectService
 @inject NavigationManager NavigationManager
 
-<div style="display: flex; justify-content:space-between">
+@*<div style="display: flex; justify-content:space-between">
     <h3>Projects</h3>
     <button class="btn btn-primary" @onclick="(() => NewProject())"><span class="oi oi-plus"></span></button>
 </div>
@@ -40,11 +40,51 @@
 else
 {
     <h3 class="text-center">Add first project.</h3>
-}
+}*@
 
+<div style="display: flex; justify-content:space-between; margin-bottom: 5px">
+    <MudText Typo="Typo.h5">Projects</MudText>
+    <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Tertiary" @onclick="(() => NewProject())">new project</MudButton>
+</div>
+<hr />
+
+<MudTable Items="@ProjectService.Projects" Dense="true" Striped="true" Filter="new Func<Project,bool>(FilterFunc1)">
+    <ToolBarContent>
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudSpacer />
+        <MudSpacer />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh></MudTh>
+        <MudTh>Project</MudTh>
+        <MudTh>Priority</MudTh>
+        <MudTh>Progress</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd><MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(() => EditProject(context.ProjectId))"></MudIconButton></MudTd>
+        <MudTd>@context.Number @context.Name</MudTd>
+        <MudTd>@context.CheckingPriority</MudTd>
+        <MudTd>progress</MudTd>
+        <MudTd>
+            <div style="display: flex; justify-content: space-evenly">
+                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Primary" EndIcon="@Icons.Filled.Preview" OnClick="(() => GoToChecking(context.ProjectId))">Review</MudButton>
+                <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Success" EndIcon="@Icons.Filled.Checklist" OnClick="(() => GoToCheckingNew(context.ProjectId))">Checking</MudButton>
+            </div>
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Nothing found.</MudText>
+    </NoRecordsContent>
+    <PagerContent>
+        <MudTablePager HorizontalAlignment="HorizontalAlignment.Center" />
+    </PagerContent>
+</MudTable>
 
 
 @code {
+    private string searchString1 = "";
+
     protected override async Task OnInitializedAsync()
     {
         await ProjectService.GetProjects();
@@ -68,5 +108,20 @@ else
     void GoToCheckingNew(int id)
     {
         NavigationManager.NavigateTo($"/checking/new/{id}");
+    }
+
+    private bool FilterFunc1(Project project) => FilterFunc(project, searchString1);
+
+    private bool FilterFunc(Project project, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (project.Number.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (project.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{project.Number} {project.Name}".Contains(searchString))
+            return true;
+        return false;
     }
 }

@@ -2,10 +2,11 @@
 @inject ICheckItemServiceClient CheckItemService
 @inject NavigationManager NavigationManager
 
-<div style="display: flex; justify-content:space-between; margin-bottom: 10px">
-    <MudText Typo="Typo.h4">Check Items (@CheckItemService.CheckItemList.Count())</MudText>
-    <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Success" @onclick="(() => NewCheckItem())">New check item</MudButton>
+<div style="display: flex; justify-content:space-between; margin-bottom: 5px">
+    <MudText Typo="Typo.h5">Check Items (@CheckItemService.CheckItemList.Count())</MudText>
+    <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Success" @onclick="(() => NewCheckItem())">New Check Item</MudButton>
 </div>
+<hr />
 
 <MudExpansionPanels MultiExpansion="true">
     @foreach (var itemGroup in CheckItemService.CheckItemList.GroupBy(x => x.Category))
