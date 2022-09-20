@@ -1,34 +1,18 @@
 ﻿@page "/error-report/{projectId:int}/{checkItemId:int}"
 @inject ICheckingServiceClient CheckingService
+@inject ICheckItemServiceClient CheckItemService
 @inject NavigationManager NavigationManager
+@inject Sotsera.Blazor.Toaster.IToaster Toaster
 
-<div style="display: flex; justify-content:space-between; margin-bottom: 5px">
-    <MudText Typo="Typo.h4">Checking Process - Error Report</MudText>
+<div style="display: flex; justify-content:space-between" class="mb-5">
+    <MudText Typo="Typo.h5">Checking Process - Error Report</MudText>
     <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToChecking())">Back to checking</MudButton>
 </div>
-
-
-@*<EditForm Model="newChecking" OnSubmit="MarkAsError">
-    <div>
-        <label>Description</label>
-        <InputTextArea @bind-Value="newChecking.Description" class="form-control" required rows="3"></InputTextArea>
-    </div>
-    <div>
-        <InputFile id="images" OnChange="OnFileChange" multiple></InputFile>
-    </div>
-    <div>
-        @foreach (var image in imagesList)
-        {
-            <img src="@image.Data" width="100" height="100" />
-        }
-    </div>
-    <br />
-    <button type="submit" class="btn btn-danger">Report</button>
-</EditForm>*@
-
+<hr />
+<MudText Typo="Typo.h6">@checkItem.Title</MudText>
 <MudForm @ref="form">
-    <MudTextField T="string" Label="Description" Variant="Variant.Filled" @bind-Value="@newChecking.Description" Lines="3" />
-    <InputFile id="fileInput112" OnChange="OnFileChange" hidden multiple accept=".jpg, .jpeg, .png" />
+    <MudTextField T="string" Label="Error description (not required)" Variant="Variant.Filled" @bind-Value="@newChecking.Description" Lines="3" />
+    <InputFile id="uploadImage" OnChange="OnFileChange" hidden multiple accept=".jpg, .jpeg, .png" />
 
     <div class="mt-2" style="display: flex; justify-content: space-between">
         <div>
@@ -36,7 +20,7 @@
                Variant="Variant.Filled"
                Color="Color.Primary"
                StartIcon="@Icons.Filled.CloudUpload"
-               for="fileInput112"
+               for="uploadImage"
                Class="mt-2">
         Upload images
     </MudButton>
@@ -63,9 +47,15 @@
     [Parameter]
     public int CheckItemId { get; set; }
 
+    CheckItem checkItem = new();
     Checking newChecking = new();
     List<Image> imagesList = new();
     MudForm? form;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        checkItem = await CheckItemService.GetSingleCheckItem(CheckItemId);
+    }
 
     async Task MarkAsError()
     {
@@ -77,6 +67,7 @@
         newChecking.Images = imagesList;
 
         await CheckingService.CreateCheckingItem(newChecking);
+        Toaster.Success("Error reported");
         NavigationManager.NavigateTo($"/checking/new/{ProjectId}");
     }
 

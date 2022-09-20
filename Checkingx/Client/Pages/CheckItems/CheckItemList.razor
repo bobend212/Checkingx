@@ -2,8 +2,8 @@
 @inject ICheckItemServiceClient CheckItemService
 @inject NavigationManager NavigationManager
 
-<div style="display: flex; justify-content:space-between; margin-bottom: 5px">
-    <MudText Typo="Typo.h4">Check Items</MudText>
+<div style="display: flex; justify-content:space-between; margin-bottom: 10px">
+    <MudText Typo="Typo.h4">Check Items (@CheckItemService.CheckItemList.Count())</MudText>
     <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Success" @onclick="(() => NewCheckItem())">New check item</MudButton>
 </div>
 
@@ -13,14 +13,11 @@
         <MudExpansionPanel>
             <TitleContent>
                 <div class="d-flex">
-                    <MudText Class="mt-1">@itemGroup.Key.ToUpper()</MudText>
+                    <MudText Class="mt-1">@itemGroup.Key.ToUpper() (@itemGroup.Count())</MudText>
                 </div>
             </TitleContent>
             <ChildContent>
                 <MudList Color="Color.Error">
-                    <MudListSubheader>
-                        @itemGroup.Count() item(s)
-                    </MudListSubheader>
                     @foreach (var item in itemGroup)
                     {
                         <div style="display: flex; justify-content:space-between">
