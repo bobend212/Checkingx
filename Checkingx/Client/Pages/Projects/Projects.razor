@@ -2,46 +2,6 @@
 @inject IProjectServiceClient ProjectService
 @inject NavigationManager NavigationManager
 
-@*<div style="display: flex; justify-content:space-between">
-    <h3>Projects</h3>
-    <button class="btn btn-primary" @onclick="(() => NewProject())"><span class="oi oi-plus"></span></button>
-</div>
-
-@if (ProjectService.Projects.Count > 0)
-{
-    <table class="table table-sm" style="table-layout: fixed; word-wrap: break-word">
-        <thead>
-            <tr>
-                <th></th>
-                <th>(id) Project</th>
-                <th>Checking Priority</th>
-                <th>Errors / Fixed / NA</th>
-                <th>Correct</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var project in ProjectService.Projects)
-            {
-                <tr>
-                    <td><button class="btn btn-primary" @onclick="(() => EditProject(project.ProjectId))"><span class="oi oi-pencil"></span></button></td>
-                    <td>(@project.ProjectId) @project.Number @project.Name</td>
-                    <td>@project.CheckingPriority</td>
-                    <td>@project.Checking.Where(x => x.Status == "error").Count() / @project.Checking.Where(x => x.Status == "fixed").Count() / @project.Checking.Where(x => x.Status == "n/a").Count()</td>
-                    <td>@project.Checking.Where(x => x.Status == "ok").Count()</td>
-                    <td><button class="btn btn-success" @onclick="(() => GoToChecking(project.ProjectId))">Checking Review</button></td>
-                    <td><button class="btn btn-primary" @onclick="(() => GoToCheckingNew(project.ProjectId))">Checking</button></td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <h3 class="text-center">Add first project.</h3>
-}*@
-
 <div style="display: flex; justify-content:space-between; margin-bottom: 5px">
     <MudText Typo="Typo.h5">Projects</MudText>
     <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Tertiary" @onclick="(() => NewProject())">new project</MudButton>
@@ -144,9 +104,9 @@ else
         return a + b;
     }
 
-    private double RetPercentage(int max, int val)
+    private string RetPercentage(int max, int val)
     {
         double retValue = ((double)val / (double)max) * 100.0;
-        return retValue;
+        return retValue.ToString("0");
     }
 }

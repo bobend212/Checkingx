@@ -11,5 +11,8 @@
         public string Status { get; set; } = string.Empty;
 
         public List<Image> Images { get; set; } = new List<Image>();
+
+        public DateTime Create { get; set; } = DateTime.Now;
+        public DateTime? Update { get; set; }
     }
 }

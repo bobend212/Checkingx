@@ -6,14 +6,18 @@
 <div class="card">
     <div class="@CardHeaderStyle(@checking.Status)" style="display: flex; justify-content: space-between">
         <h5>Error Description</h5>
-        <h5>status: @checking.Status</h5>
+        <h5>checked: @checking.Create.ToString("dd/MMM/yyyy HH:mm")</h5>
+        @if (checking.Update != null)
+        {
+            <h5>reviewed: @checking.Update?.ToString("dd/MMM/yyyy HH:mm")</h5>
+        }
     </div>
     <div class="card-body">
         <h5 class="card-title">@checking.Description</h5>
         <div>
             @if (checking.Images.Count > 0)
             {
-                <MudCarousel Class="mud-width-full" ItemsSource="@checking.Images" Style="height: 700px" AutoCycle="false">
+                <MudCarousel Class="mud-width-full" ItemsSource="@checking.Images" Style="height: 650px" AutoCycle="false">
                     <ItemTemplate>
                         <div class="d-flex justify-center" style="height:100%">
                             <MudImage Src="@context.Data" ObjectFit="ObjectFit.Fill"></MudImage>

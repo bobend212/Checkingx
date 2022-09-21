@@ -17,5 +17,7 @@ namespace Checkingx.Shared
 
         public List<Checking>? Checking { get; set; }
 
+        public DateTime Create { get; set; } = DateTime.Now;
+        public DateTime? Update { get; set; }
     }
 }

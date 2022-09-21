@@ -23,6 +23,29 @@
     </div>
 </MudForm>
 
+<br />
+
+<MudTimeline TimelinePosition="TimelinePosition.Left" TimelineOrientation="TimelineOrientation.Vertical">
+    <MudTimelineItem Size="Size.Small" Color="Color.Success" Elevation="4">
+        <MudCard Outlined="false" Elevation="4" Style="width:25%">
+            <MudCardContent>
+                <MudText Typo="Typo.h6">Create</MudText>
+                <MudText Typo="Typo.body2">@project.Create.ToString("dd/MMM/yyyy HH:MM")</MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudTimelineItem>
+    @if (project.Update != null)
+    {
+            <MudTimelineItem Size="Size.Small" Color="Color.Info" Elevation="4">
+                <MudCard Outlined="false" Elevation="4" Style="width:25%">
+                    <MudCardContent>
+                        <MudText Typo="Typo.h6">Update</MudText>
+                    <MudText Typo="Typo.body2">@project.Update?.ToString("dd/MMM/yyyy HH:MM")</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudTimelineItem>
+    }
+</MudTimeline>
 @code {
     [Parameter]
     public int Id { get; set; }

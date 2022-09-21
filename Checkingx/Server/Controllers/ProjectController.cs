@@ -60,6 +60,7 @@ namespace Checkingx.Server.Controllers
             dbProject.Number = projectDto.Number;
             dbProject.Name = projectDto.Name;
             dbProject.CheckingPriority = projectDto.CheckingPriority;
+            dbProject.Update = DateTime.Now;
 
             var updateProject = _mapper.Map(projectDto, dbProject);
             _context.Entry(dbProject).State = EntityState.Modified;

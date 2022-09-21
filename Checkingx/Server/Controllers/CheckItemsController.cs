@@ -103,6 +103,7 @@ namespace Checkingx.Server.Controllers
             findCheckItem.Title = checkItemDto.Title;
             findCheckItem.Category = checkItemDto.Category;
             findCheckItem.Priority = checkItemDto.Priority;
+            findCheckItem.Update = DateTime.Now;
 
             var updateCheckItem = _mapper.Map(checkItemDto, findCheckItem);
             _context.Entry(findCheckItem).State = EntityState.Modified;
