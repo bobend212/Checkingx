@@ -50,26 +50,40 @@ else
 
 <MudTable Items="@ProjectService.Projects" Dense="true" Striped="true" Filter="new Func<Project,bool>(FilterFunc1)">
     <ToolBarContent>
-        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField @bind-Value="searchString1" Placeholder="Search project" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         <MudSpacer />
         <MudSpacer />
     </ToolBarContent>
     <HeaderContent>
         <MudTh></MudTh>
-        <MudTh>Project</MudTh>
-        <MudTh>Priority</MudTh>
-        <MudTh>Progress</MudTh>
-        <MudTh></MudTh>
+        <MudTh>Project (priority)</MudTh>
+        <MudTh Style="text-align:center">Review Progress</MudTh>
+        <MudTh Style="text-align:center">OK</MudTh>
+        <MudTh Style="text-align:center">N/A</MudTh>
+        <MudTh Style="text-align:center"></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd><MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(() => EditProject(context.ProjectId))"></MudIconButton></MudTd>
-        <MudTd>@context.Number @context.Name</MudTd>
-        <MudTd>@context.CheckingPriority</MudTd>
-        <MudTd>progress</MudTd>
+        <MudTd>@context.Number @context.Name (@context.CheckingPriority)</MudTd>
+        <MudTd Style="text-align:center">
+            @if (@RetMax(context.Checking.Where(x => x.Status == "error").Count(), context.Checking.Where(x => x.Status == "fixed").Count()) > 0)
+            {
+                <MudProgressLinear Color="Color.Info" Size="Size.Small" Class="my-1" Rounded="true" Value="@context.Checking.Where(x => x.Status == "fixed").Count()" Max="@RetMax(context.Checking.Where(x => x.Status == "error").Count(), context.Checking.Where(x => x.Status == "fixed").Count())">
+                    <MudText Typo="Typo.subtitle2">
+                        <b>@RetPercentage(@RetMax(context.Checking.Where(x => x.Status == "error").Count(), context.Checking.Where(x => x.Status == "fixed").Count()), @context.Checking.Where(x => x.Status == "fixed").Count())%</b>
+                    </MudText>
+                </MudProgressLinear>
+            }
+        </MudTd>
+        <MudTd Style="text-align:center">@context.Checking.Where(x => x.Status == "ok").Count()</MudTd>
+        <MudTd Style="text-align:center">@context.Checking.Where(x => x.Status == "n/a").Count()</MudTd>
         <MudTd>
-            <div style="display: flex; justify-content: space-evenly">
-                <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Primary" EndIcon="@Icons.Filled.Preview" OnClick="(() => GoToChecking(context.ProjectId))">Review</MudButton>
-                <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Success" EndIcon="@Icons.Filled.Checklist" OnClick="(() => GoToCheckingNew(context.ProjectId))">Checking</MudButton>
+            <div style="display: flex; justify-content: center">
+                @if (context.Checking.Select(x => x.CheckItem).Count() > 0)
+                {
+                    <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Primary" EndIcon="@Icons.Filled.Preview" OnClick="(() => GoToChecking(context.ProjectId))">Review</MudButton>
+                }
+                <MudButton Class="ml-2" Variant="Variant.Filled" Size="Size.Small" Color="Color.Success" EndIcon="@Icons.Filled.Checklist" OnClick="(() => GoToCheckingNew(context.ProjectId))">Checking</MudButton>
             </div>
         </MudTd>
     </RowTemplate>
@@ -123,5 +137,16 @@ else
         if ($"{project.Number} {project.Name}".Contains(searchString))
             return true;
         return false;
+    }
+
+    private int RetMax(int a, int b)
+    {
+        return a + b;
+    }
+
+    private double RetPercentage(int max, int val)
+    {
+        double retValue = ((double)val / (double)max) * 100.0;
+        return retValue;
     }
 }
