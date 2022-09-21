@@ -61,17 +61,17 @@
     async Task HandleSubmit()
     {
         await CheckItemService.UpdateCheckItem(checkItem);
-        NavigationManager.NavigateTo("/checkitem-list");
+        NavigationManager.NavigateTo($"/checkitem-list/{checkItem.Category}");
     }
 
     async Task DeleteCheckItem()
     {
         await CheckItemService.DeleteCheckItem(checkItem.CheckItemId);
-        NavigationManager.NavigateTo("/checkitem-list");
+        NavigationManager.NavigateTo($"/checkitem-list/{checkItem.Category}");
     }
 
     void BackToCheckItemList()
     {
-        NavigationManager.NavigateTo("/checkitem-list");
+        NavigationManager.NavigateTo($"/checkitem-list/{checkItem.Category}");
     }
 }

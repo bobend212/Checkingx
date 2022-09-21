@@ -1,51 +1,70 @@
-﻿@page "/checkitem-list"
+﻿@page "/checkitem-list/{category}"
 @inject ICheckItemServiceClient CheckItemService
 @inject NavigationManager NavigationManager
+@inject Sotsera.Blazor.Toaster.IToaster Toaster
 
 <div style="display: flex; justify-content:space-between; margin-bottom: 5px">
-    <MudText Typo="Typo.h5">Check Items (@CheckItemService.CheckItemList.Count())</MudText>
-    <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Success" @onclick="(() => NewCheckItem())">New Check Item</MudButton>
+    <MudText Typo="Typo.h5">Check Items (category: @Category)</MudText>
+    <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToCheckItemHome())">Back</MudButton>
 </div>
 <hr />
 
-<MudExpansionPanels MultiExpansion="true">
-    @foreach (var itemGroup in CheckItemService.CheckItemList.GroupBy(x => x.Category))
-    {
-        <MudExpansionPanel>
-            <TitleContent>
-                <div class="d-flex">
-                    <MudText Class="mt-1">@itemGroup.Key.ToUpper() (@itemGroup.Count())</MudText>
-                </div>
-            </TitleContent>
-            <ChildContent>
-                <MudList Color="Color.Error">
-                    @foreach (var item in itemGroup)
-                    {
-                        <div style="display: flex; justify-content:space-between">
-                            <MudListItem>[@item.Priority] @item.Title</MudListItem>
-                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="(() => UpdateCheckItem(item.CheckItemId))"></MudIconButton>
-                        </div>
-                    }
-                </MudList>
-            </ChildContent>
-        </MudExpansionPanel>
-    }
-</MudExpansionPanels>
-
+<MudTable Items="@CheckItemService.CheckItemList.OrderBy(x => x.OrderNo)" Dense="true" Striped="true" Filter="new Func<CheckItem,bool>(FilterFunc1)">
+    <ToolBarContent>
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudSpacer />
+        <MudSpacer />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh></MudTh>
+        <MudTh>Order No.</MudTh>
+        <MudTh>Title</MudTh>
+        <MudTh>Priority</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd><MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="(() => UpdateCheckItem(context.CheckItemId))"></MudIconButton></MudTd>
+        <MudTd>@context.OrderNo</MudTd>
+        <MudTd>@context.Title</MudTd>
+        <MudTd>@context.Priority</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>Nothing found.</MudText>
+    </NoRecordsContent>
+    <PagerContent>
+        <MudTablePager HorizontalAlignment="HorizontalAlignment.Center" />
+    </PagerContent>
+</MudTable>
 
 @code {
+    [Parameter]
+    public string Category { get; set; }
+
+    private string searchString1 = "";
+
     protected override async Task OnInitializedAsync()
     {
-        await CheckItemService.GetAllCheckItems();
+        await CheckItemService.GetAllCheckItemsByCategory(Category);
     }
 
-    void NewCheckItem()
+    void BackToCheckItemHome()
     {
-        NavigationManager.NavigateTo("/new-checkItem");
+        NavigationManager.NavigateTo("/checkitem-home");
     }
 
     void UpdateCheckItem(int checkItemId)
     {
         NavigationManager.NavigateTo($"/checkitem/{checkItemId}");
     }
+
+    private bool FilterFunc1(CheckItem checkItem) => FilterFunc(checkItem, searchString1);
+
+    private bool FilterFunc(CheckItem checkItem, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (checkItem.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
 }
+

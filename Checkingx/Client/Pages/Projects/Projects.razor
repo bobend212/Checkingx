@@ -29,7 +29,7 @@
             @if (@RetMax(context.Checking.Where(x => x.Status == "error").Count(), context.Checking.Where(x => x.Status == "fixed").Count()) > 0)
             {
                 <MudProgressLinear Color="Color.Info" Size="Size.Small" Class="my-1" Rounded="true" Value="@context.Checking.Where(x => x.Status == "fixed").Count()" Max="@RetMax(context.Checking.Where(x => x.Status == "error").Count(), context.Checking.Where(x => x.Status == "fixed").Count())">
-                    <MudText Typo="Typo.subtitle2">
+                    <MudText Typo="Typo.subtitle2" Class="mb-3">
                         <b>@RetPercentage(@RetMax(context.Checking.Where(x => x.Status == "error").Count(), context.Checking.Where(x => x.Status == "fixed").Count()), @context.Checking.Where(x => x.Status == "fixed").Count())%</b>
                     </MudText>
                 </MudProgressLinear>

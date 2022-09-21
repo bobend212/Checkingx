@@ -28,6 +28,13 @@ namespace Checkingx.Server.Controllers
             return Ok(await _context.CheckItems.ToListAsync());
         }
 
+        [SwaggerOperation(Summary = "Return all check items for specified category.")]
+        [HttpGet("all/{category}")]
+        public async Task<ActionResult<List<CheckItem>>> GetAllCheckItemsByCategory(string category)
+        {
+            return Ok(await _context.CheckItems.Where(x => x.Category.ToUpper() == category.ToUpper()).ToListAsync());
+        }
+
         [SwaggerOperation(Summary = "Return single CheckItem entry by CheckItemId.")]
         [HttpGet("single/{checkItemId}")]
         public async Task<ActionResult<CheckItem>> GetSingleCheckItem(int checkItemId)
@@ -85,6 +92,7 @@ namespace Checkingx.Server.Controllers
         [HttpPost("create")]
         public async Task<ActionResult<CheckItem>> AddCheckItem(CheckItemCreateDTO checkItemDto)
         {
+            checkItemDto.Category = checkItemDto.Category.ToUpper();
             var newCheckItem = _mapper.Map<CheckItem>(checkItemDto);
             _context.CheckItems.Add(newCheckItem);
             await _context.SaveChangesAsync();

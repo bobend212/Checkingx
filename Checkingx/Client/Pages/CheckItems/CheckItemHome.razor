@@ -1,0 +1,46 @@
+﻿@page "/checkitem-home"
+@inject ICheckItemServiceClient CheckItemService
+@inject NavigationManager NavigationManager
+
+<div style="display: flex; justify-content:space-between; margin-bottom: 5px">
+    <MudText Typo="Typo.h5">Check Items (@CheckItemService.CheckItemList.Count())</MudText>
+    <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Success" @onclick="(() => NewCheckItem())">New Check Item</MudButton>
+</div>
+<hr />
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudGrid Justify="Justify.FlexStart">
+            @foreach (var itemGroup in CheckItemService.CheckItemList.GroupBy(x => x.Category))
+            {
+                <MudItem xs="2">
+                    <MudButton Variant="Variant.Filled" Style="width: 200px; height: 80px;" OnClick="(() => GoToCheckItemList(itemGroup.Key))">
+                            @itemGroup.Key.ToUpper() (@itemGroup.Count())
+                        </MudButton>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudItem>
+</MudGrid>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckItemService.GetAllCheckItems();
+    }
+
+    void NewCheckItem()
+    {
+        NavigationManager.NavigateTo("/new-checkItem");
+    }
+
+    void UpdateCheckItem(int checkItemId)
+    {
+        NavigationManager.NavigateTo($"/checkitem/{checkItemId}");
+    }
+
+    void GoToCheckItemList(string cat)
+    {
+        NavigationManager.NavigateTo($"/checkitem-list/{cat}");
+    }
+}

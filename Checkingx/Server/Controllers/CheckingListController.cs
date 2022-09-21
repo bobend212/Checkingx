@@ -67,7 +67,7 @@ namespace Checkingx.Server.Controllers
                 return NotFound("Checking not found.");
 
             findChecking.Status = checking.Status;
-            findChecking.Update = DateTime.Now;
+            findChecking.ReviewDate = DateTime.Now;
 
             await _context.SaveChangesAsync();
 

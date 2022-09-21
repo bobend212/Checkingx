@@ -12,5 +12,7 @@ namespace Checkingx.Shared.DTOs
 
         [Required]
         public int Priority { get; set; }
+
+        public int OrderNo { get; set; }
     }
 }

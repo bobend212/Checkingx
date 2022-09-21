@@ -20,6 +20,13 @@ namespace Checkingx.Client.Services
                 CheckItemList = result;
         }
 
+        public async Task GetAllCheckItemsByCategory(string category)
+        {
+            var result = await _http.GetFromJsonAsync<List<CheckItem>>($"api/CheckItems/all/{category}");
+            if (result != null)
+                CheckItemList = result;
+        }
+
         public async Task<CheckItem> GetSingleCheckItem(int checkItemId)
         {
             var result = await _http.GetFromJsonAsync<CheckItem>($"api/CheckItems/single/{checkItemId}");

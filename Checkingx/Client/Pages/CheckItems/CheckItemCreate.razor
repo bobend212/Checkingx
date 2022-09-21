@@ -17,6 +17,7 @@
         <MudSelectItem T="int" Value="2">2</MudSelectItem>
         <MudSelectItem T="int" Value="3">3</MudSelectItem>
     </MudSelect>
+    <MudNumericField @bind-Value="checkItem.OrderNo" Label="Order Number" Variant="Variant.Filled" Min="0" Max="10000" />
     <div class="mt-2">
         <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Success" @onclick="(() => HandleSubmit())">Submit</MudButton>
     </div>
@@ -33,7 +34,7 @@
         if (result.CheckItemId != 0)
         {
             Toaster.Info($"New Item Created");
-            NavigationManager.NavigateTo("/checkitem-list");
+            NavigationManager.NavigateTo("/checkitem-home");
         }
         else
         {
@@ -43,7 +44,7 @@
 
     void BackToCheckItemList()
     {
-        NavigationManager.NavigateTo("/checkitem-list");
+        NavigationManager.NavigateTo("/checkitem-home");
     }
 
 }

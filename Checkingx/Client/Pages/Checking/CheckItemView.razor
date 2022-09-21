@@ -6,10 +6,10 @@
 <div class="card">
     <div class="@CardHeaderStyle(@checking.Status)" style="display: flex; justify-content: space-between">
         <h5>Error Description</h5>
-        <h5>checked: @checking.Create.ToString("dd/MMM/yyyy HH:mm")</h5>
-        @if (checking.Update != null)
+        <h5>checked: @checking.CheckDate.ToString("dd/MMM/yyyy HH:mm")</h5>
+        @if (checking.ReviewDate != null)
         {
-            <h5>reviewed: @checking.Update?.ToString("dd/MMM/yyyy HH:mm")</h5>
+            <h5>reviewed: @checking.ReviewDate?.ToString("dd/MMM/yyyy HH:mm")</h5>
         }
     </div>
     <div class="card-body">

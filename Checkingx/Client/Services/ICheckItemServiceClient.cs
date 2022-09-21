@@ -6,6 +6,8 @@
 
         Task GetAllCheckItems();
 
+        Task GetAllCheckItemsByCategory(string category);
+
         Task<CheckItem> GetSingleCheckItem(int checkItemId);
 
         Task<CheckItem> CreateCheckItem(CheckItem checkItem);

@@ -9,5 +9,7 @@
 
         public DateTime Create { get; set; } = DateTime.Now;
         public DateTime? Update { get; set; }
+
+        public int OrderNo { get; set; }
     }
 }

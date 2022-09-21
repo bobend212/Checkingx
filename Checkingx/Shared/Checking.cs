@@ -12,7 +12,7 @@
 
         public List<Image> Images { get; set; } = new List<Image>();
 
-        public DateTime Create { get; set; } = DateTime.Now;
-        public DateTime? Update { get; set; }
+        public DateTime CheckDate { get; set; } = DateTime.Now;
+        public DateTime? ReviewDate { get; set; }
     }
 }

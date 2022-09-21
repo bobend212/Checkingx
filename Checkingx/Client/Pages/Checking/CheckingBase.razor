@@ -44,8 +44,8 @@
                     </GroupHeaderTemplate>
                     <RowTemplate>
                         <MudTd>@context.CheckItem.Title</MudTd>
-                        <MudTd>@context.Create.ToString("dd/MMM/yyyy HH:mm")</MudTd>
-                        <MudTd>@context.Update?.ToString("dd/MMM/yyyy HH:mm")</MudTd>
+                        <MudTd>@context.CheckDate.ToString("dd/MMM/yyyy HH:mm")</MudTd>
+                        <MudTd>@context.ReviewDate?.ToString("dd/MMM/yyyy HH:mm")</MudTd>
                         <MudTd Style="text-align: center">@context.Images.Count()</MudTd>
                         <MudTd Style="text-align: right">
                             @if (context.Status == "error" || context.Status == "fixed")
