@@ -3,7 +3,7 @@
 @inject NavigationManager NavigationManager
 
 <div style="display: flex; justify-content:space-between; margin-bottom: 5px">
-    <MudText Typo="Typo.h5">Check Items - Update</MudText>
+    <MudText Typo="Typo.h5">Check Items - Details</MudText>
     <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToCheckItemList())">Back</MudButton>
 </div>
 <hr />
@@ -16,8 +16,8 @@
         <MudSelectItem T="int" Value="2">2</MudSelectItem>
         <MudSelectItem T="int" Value="3">3</MudSelectItem>
     </MudSelect>
-    <div class="mt-2">
-        <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Success" @onclick="(() => HandleSubmit())">Submit</MudButton>
+    <div class="mt-2" style="display: flex; justify-content: space-between">
+        <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Success" @onclick="(() => HandleSubmit())">Update</MudButton>
         <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Error" @onclick="(() => DeleteCheckItem())">Remove</MudButton>
     </div>
 </MudForm>

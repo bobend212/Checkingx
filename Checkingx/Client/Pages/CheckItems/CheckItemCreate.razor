@@ -1,6 +1,7 @@
 ﻿@page "/new-checkItem"
 @inject ICheckItemServiceClient CheckItemService
 @inject NavigationManager NavigationManager
+@inject Sotsera.Blazor.Toaster.IToaster Toaster
 
 <div style="display: flex; justify-content:space-between; margin-bottom: 5px">
     <MudText Typo="Typo.h5">Check Item - New</MudText>
@@ -29,14 +30,14 @@
     async Task HandleSubmit()
     {
         var result = await CheckItemService.CreateCheckItem(checkItem);
-        Console.WriteLine(result.CheckItemId);
         if (result.CheckItemId != 0)
         {
+            Toaster.Info($"New Item Created");
             NavigationManager.NavigateTo("/checkitem-list");
         }
         else
         {
-            Console.WriteLine("something went wrong");
+            Toaster.Error($"Something went wrong");
         }
     }
 

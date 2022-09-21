@@ -13,7 +13,7 @@ namespace Checkingx.Shared
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        public int CheckingPriority { get; set; }
+        public int CheckingPriority { get; set; } = 1;
 
         public List<Checking>? Checking { get; set; }
 

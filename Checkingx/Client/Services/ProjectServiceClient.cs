@@ -33,9 +33,10 @@ namespace Checkingx.Client.Services
             throw new Exception("Project not found!");
         }
 
-        public async Task CreateProject(Project project)
+        public async Task<Project> CreateProject(Project project)
         {
             var result = await _http.PostAsJsonAsync("api/project/create", project);
+            return await result.Content.ReadFromJsonAsync<Project>();
         }
 
         public async Task UpdateProject(Project project)

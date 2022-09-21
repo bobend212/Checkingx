@@ -11,6 +11,6 @@ namespace Checkingx.Shared.DTOs
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        public int CheckingPriority { get; set; }
+        public int CheckingPriority { get; set; } = 1;
     }
 }

@@ -30,7 +30,7 @@
                     </ColGroup>
                     <HeaderContent>
                         <MudTh>Title</MudTh>
-                        <MudTh>Status</MudTh>
+                        <MudTh Style="text-align: center">Attachments</MudTh>
                         <MudTh></MudTh>
                     </HeaderContent>
                     <GroupHeaderTemplate>
@@ -42,7 +42,7 @@
                     </GroupHeaderTemplate>
                     <RowTemplate>
                         <MudTd>@context.CheckItem.Title</MudTd>
-                        <MudTd>@context.Status</MudTd>
+                        <MudTd Style="text-align: center">@context.Images.Count()</MudTd>
                         <MudTd Style="text-align: right">
                             @if (context.Status == "error" || context.Status == "fixed")
                             {

@@ -32,7 +32,7 @@ namespace Checkingx.Server.Controllers
         [HttpGet("all/project/{projectId}")]
         public async Task<ActionResult<List<Checking>>> GetAllCheckingsByProjectId(int projectId)
         {
-            var findCheckings = await _context.Checking.Where(x => x.ProjectId == projectId).Include(x => x.CheckItem).ToListAsync();
+            var findCheckings = await _context.Checking.Where(x => x.ProjectId == projectId).Include(x => x.CheckItem).Include(x => x.Images).ToListAsync();
 
             return Ok(findCheckings);
         }

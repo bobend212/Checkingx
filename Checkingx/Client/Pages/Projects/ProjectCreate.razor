@@ -1,36 +1,47 @@
 ﻿@page "/new-project"
 @inject IProjectServiceClient ProjectService
 @inject NavigationManager NavigationManager
+@inject Sotsera.Blazor.Toaster.IToaster Toaster
 
-<h3>ProjectCreate</h3>
+<div style="display: flex; justify-content:space-between; margin-bottom: 5px">
+    <MudText Typo="Typo.h5">Project - New</MudText>
+    <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToProjectList())">Back</MudButton>
+</div>
+<hr />
 
-<EditForm Model="project" OnSubmit="HandleSubmit">
-    <div>
-        <label>Number</label>
-        <InputText @bind-Value="project.Number" class="form-control"></InputText>
+<MudForm @ref="form">
+    <MudTextField T="string" Label="Number" Required="true" Variant="Variant.Filled" @bind-Value="project.Number" />
+    <MudTextField T=" string" Label="Name" Required="true" Variant="Variant.Filled" @bind-Value="project.Name" />
+    <MudSelect Dense="true" T="int" Label="Priority" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="project.CheckingPriority" Required="true">
+        <MudSelectItem T="int" Value="1">1</MudSelectItem>
+        <MudSelectItem T="int" Value="2">2</MudSelectItem>
+        <MudSelectItem T="int" Value="3">3</MudSelectItem>
+    </MudSelect>
+    <div class="mt-2">
+        <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Success" @onclick="(() => HandleSubmit())">Submit</MudButton>
     </div>
-    <div>
-        <label>Name</label>
-        <InputText @bind-Value="project.Name" class="form-control"></InputText>
-    </div>
-    <div>
-        <label>Checking Priority</label>
-        <InputSelect @bind-Value="project.CheckingPriority" class="form-select">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-        </InputSelect>
-    </div>
-    <br />
-    <button type="submit" class="btn btn-primary">Submit</button>
-</EditForm>
+</MudForm>
 
 @code {
     Project project = new Project();
+    MudForm? form;
 
     async Task HandleSubmit()
     {
-        await ProjectService.CreateProject(project);
+        var result = await ProjectService.CreateProject(project);
+        if (result.ProjectId != 0)
+        {
+            Toaster.Info($"New Project Created");
+            NavigationManager.NavigateTo("/projects");
+        }
+        else
+        {
+            Toaster.Error($"Something went wrong");
+        }
+    }
+
+    void BackToProjectList()
+    {
         NavigationManager.NavigateTo("/projects");
     }
 

@@ -9,7 +9,7 @@
 
         Task<Project> GetSingleProject(int projectId);
 
-        Task CreateProject(Project project);
+        Task<Project> CreateProject(Project project);
 
         Task UpdateProject(Project project);
 
