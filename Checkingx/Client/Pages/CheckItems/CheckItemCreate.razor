@@ -5,31 +5,70 @@
 
 <div style="display: flex; justify-content:space-between; margin-bottom: 5px">
     <MudText Typo="Typo.h5">Check Item - New</MudText>
-    <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToCheckItemList())">Back</MudButton>
+    <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Filled.ArrowBackIosNew" @onclick="(() => BackToCheckItemList())">Back</MudButton>
 </div>
 <hr />
 
 <MudForm @ref="form">
     <MudTextField T="string" Label="Title" Required="true" Variant="Variant.Filled" @bind-Value="checkItem.Title" />
-    <MudTextField T=" string" Label="Category" Required="true" Variant="Variant.Filled" @bind-Value="checkItem.Category" />
+    <MudSelect T="string" Label="Category" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Filled" @bind-Value="checkItem.Category" SelectedValuesChanged="ShowLastItemsByCategory">
+        @foreach (var item in categories)
+        {
+            <MudSelectItem Value="@item" />
+        }
+    </MudSelect>
     <MudSelect Dense="true" T="int" Label="Priority" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" @bind-Value="checkItem.Priority" Required="true">
         <MudSelectItem T="int" Value="1">1</MudSelectItem>
         <MudSelectItem T="int" Value="2">2</MudSelectItem>
         <MudSelectItem T="int" Value="3">3</MudSelectItem>
     </MudSelect>
-    <MudNumericField @bind-Value="checkItem.OrderNo" Label="Order Number" Variant="Variant.Filled" Min="0" Max="10000" />
+    <MudNumericField HideSpinButtons="true" Required="true" @bind-Value="tempOrderNo" Label="Order Number" Variant="Variant.Filled" Min="0" Max="10000" />
     <div class="mt-2">
         <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Success" @onclick="(() => HandleSubmit())">Submit</MudButton>
     </div>
 </MudForm>
 
+@if (!string.IsNullOrEmpty(checkItem.Category))
+{
+
+    <div class="mt-5">
+        <MudText Typo="Typo.h5">Last 3 items for @checkItem.Category category</MudText>
+        <MudSimpleTable Style="overflow-x: auto;">
+            <thead>
+                <tr>
+                    <th>OrderNo</th>
+                    <th>Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in CheckItemService.CheckItemList.OrderBy(x => x.OrderNo).TakeLast(3))
+                {
+                    <tr>
+                        <td>@item.OrderNo</td>
+                        <td>@item.Title</td>
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    </div>
+}
 
 @code {
     CheckItem checkItem = new();
     MudForm? form;
+    int tempOrderNo = 0;
+
+    List<string> categories = new List<string>() { "Panels", "Slab", "Roof" };
+
+    async Task ShowLastItemsByCategory()
+    {
+        await CheckItemService.GetAllCheckItemsByCategory(checkItem.Category);
+        tempOrderNo = CheckItemService.CheckItemList.OrderBy(x => x.OrderNo).Last().OrderNo + 1;
+    }
 
     async Task HandleSubmit()
     {
+        checkItem.OrderNo = tempOrderNo;
         var result = await CheckItemService.CreateCheckItem(checkItem);
         if (result.CheckItemId != 0)
         {

@@ -27,7 +27,7 @@
             }
         </div>
         <div style="display: flex; justify-content: space-between">
-            <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToList())">Back to list</MudButton>
+            <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Filled.ArrowBackIosNew" @onclick="(() => BackToList())">Back to list</MudButton>
             @if (checking.Status == "error")
             {
                 <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Tertiary" @onclick="(() => HandleCorrect())">Review & Close</MudButton>

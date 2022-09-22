@@ -7,13 +7,13 @@
 
 <div style="display: flex; justify-content:space-between; margin-bottom: 5px">
     <MudText Typo="Typo.h5">Checking</MudText>
-    <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" @onclick="(() => BackToProjects())">Back</MudButton>
+    <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Filled.ArrowBackIosNew" @onclick="(() => BackToProjects())">Back</MudButton>
 </div>
 <hr />
 @if (checkItems.Count() > 0)
 {
     <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary">
-        @foreach (var item in checkItems.GroupBy(x => x.Category))
+        @foreach (var item in checkItems.OrderBy(x => x.OrderNo).GroupBy(x => x.Category))
         {
             <MudTabPanel Text="@item.Key.ToUpper()">
                 <MudTable Items="@item" Hover="true" Dense="true" Class="mt-2">
