@@ -1,9 +1,7 @@
-﻿using AutoMapper;
-using Checkingx.Server.Data;
+﻿using Checkingx.Server.Services;
 using Checkingx.Shared;
 using Checkingx.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Checkingx.Server.Controllers
@@ -12,29 +10,26 @@ namespace Checkingx.Server.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
+        private readonly IProjectService _projectService;
 
-        public ProjectController(DataContext context, IMapper mapper)
+        public ProjectController(IProjectService projectService)
         {
-            _context = context;
-            _mapper = mapper;
+            _projectService = projectService;
         }
 
         [SwaggerOperation(Summary = "Return all projects (include checkings and check items).")]
         [HttpGet("all")]
         public async Task<ActionResult<List<Project>>> GetAllProjects()
         {
-            return Ok(await _context.Projects.Include(x => x.Checking).ThenInclude(x => x.CheckItem).ToListAsync());
+            return Ok(await _projectService.GetAllProjects());
         }
 
         [SwaggerOperation(Summary = "Return single project (include checkings and check items).")]
         [HttpGet("single/{projectId}")]
         public async Task<ActionResult<Project>> GetProject(int projectId)
         {
-            var findProject = await _context.Projects.Include(x => x.Checking).ThenInclude(x => x.CheckItem).FirstOrDefaultAsync(x => x.ProjectId == projectId);
+            var findProject = await _projectService.GetSingleProject(projectId);
             if (findProject == null) return NotFound("Project not found.");
-
             return Ok(findProject);
         }
 
@@ -42,10 +37,7 @@ namespace Checkingx.Server.Controllers
         [HttpPost("create")]
         public async Task<ActionResult<Project>> AddProject(ProjectCreateDTO projectDto)
         {
-            var newProject = _mapper.Map<Project>(projectDto);
-            _context.Projects.Add(newProject);
-            await _context.SaveChangesAsync();
-
+            var newProject = await _projectService.CreateProject(projectDto);
             return Ok(newProject);
         }
 
@@ -53,18 +45,9 @@ namespace Checkingx.Server.Controllers
         [HttpPut("update/{projectId}")]
         public async Task<ActionResult<Project>> UpdateProject(ProjectUpdateDTO projectDto, int projectId)
         {
-            var dbProject = await _context.Projects.FirstOrDefaultAsync(x => x.ProjectId == projectId);
-            if (dbProject == null)
+            var updateProject = await _projectService.UpdateProject(projectDto, projectId);
+            if (updateProject == null)
                 return NotFound("Project not found.");
-
-            dbProject.Number = projectDto.Number;
-            dbProject.Name = projectDto.Name;
-            dbProject.CheckingPriority = projectDto.CheckingPriority;
-            dbProject.Update = DateTime.Now;
-
-            var updateProject = _mapper.Map(projectDto, dbProject);
-            _context.Entry(dbProject).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
 
             return Ok(updateProject);
         }
@@ -73,13 +56,11 @@ namespace Checkingx.Server.Controllers
         [HttpDelete("delete/{projectId}")]
         public async Task<ActionResult> DeleteProject(int projectId)
         {
-            var dbProject = await _context.Projects.FirstOrDefaultAsync(x => x.ProjectId == projectId);
-            if (dbProject == null)
+            var findProject = await _projectService.GetSingleProject(projectId);
+            if (findProject == null)
                 return NotFound("Project not found.");
 
-            _context.Projects.Remove(dbProject);
-            await _context.SaveChangesAsync();
-
+            await _projectService.DeleteProject(projectId);
             return Ok();
         }
     }

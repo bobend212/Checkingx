@@ -1,4 +1,5 @@
 using Checkingx.Server.Data;
+using Checkingx.Server.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -19,6 +20,9 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<ICheckItemService, CheckItemService>();
 
 var app = builder.Build();
 

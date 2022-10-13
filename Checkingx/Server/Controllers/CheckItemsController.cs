@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Checkingx.Server.Data;
+using Checkingx.Server.Services;
 using Checkingx.Shared;
 using Checkingx.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -14,89 +15,65 @@ namespace Checkingx.Server.Controllers
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly ICheckItemService _checkItemService;
 
-        public CheckItemsController(DataContext context, IMapper mapper)
+        public CheckItemsController(DataContext context, IMapper mapper, ICheckItemService checkItemService)
         {
             _context = context;
             _mapper = mapper;
+            _checkItemService = checkItemService;
         }
 
         [SwaggerOperation(Summary = "Return all check items.")]
         [HttpGet("all")]
         public async Task<ActionResult<List<CheckItem>>> GetAllCheckItems()
         {
-            return Ok(await _context.CheckItems.ToListAsync());
+            return Ok(await _checkItemService.GetAllCheckItems());
         }
 
         [SwaggerOperation(Summary = "Return all check items for specified category.")]
         [HttpGet("all/{category}")]
         public async Task<ActionResult<List<CheckItem>>> GetAllCheckItemsByCategory(string category)
         {
-            return Ok(await _context.CheckItems.Where(x => x.Category.ToUpper() == category.ToUpper()).ToListAsync());
+            return Ok(await _checkItemService.GetAllCheckItemsByCategory(category));
         }
 
         [SwaggerOperation(Summary = "Return single CheckItem entry by CheckItemId.")]
         [HttpGet("single/{checkItemId}")]
         public async Task<ActionResult<CheckItem>> GetSingleCheckItem(int checkItemId)
         {
-            var findCheckItem = await _context.CheckItems.FirstOrDefaultAsync(x => x.CheckItemId == checkItemId);
+            var findCheckItem = await _checkItemService.GetSingleCheckItem(checkItemId);
             if (findCheckItem == null) return NotFound("Check Item not found.");
-
             return Ok(findCheckItem);
         }
 
         [SwaggerOperation(Summary = "Return all CheckItems NOT CHECKED by projectId.")]
         [HttpGet("project/{projectId}/not-checked")]
-        public async Task<ActionResult<List<CheckItem>>> ShowOnlyCheckingsNotCheckedByProject(int projectId)
+        public async Task<ActionResult<List<CheckItem>>> ShowOnlyCheckItemsNotCheckedByProject(int projectId)
         {
             var findProject = await _context.Projects.FirstOrDefaultAsync(x => x.ProjectId == projectId);
             if (findProject == null) return NotFound("Project not found.");
 
-            var allCheckItems = await _context.CheckItems.ToListAsync();
-
-            var projectCheckItems = await _context.Projects
-                .Where(x => x.ProjectId == projectId)
-                .SelectMany(x => x.Checking.Select(x => x.CheckItem))
-                .ToListAsync();
-
-            var checkItemsNotChecked = allCheckItems.Where(p => !projectCheckItems.Any(p2 => p2.CheckItemId == p.CheckItemId)).ToList();
-
-            //var resultExtended = new
-            //{
-            //    Project = findProject.Number,
-            //    TotalCheckItems = allCheckItems.Count,
-            //    CheckedCheckItems = allCheckItems.Count - (allCheckItems.Count - projectCheckItems.Count),
-            //    LeftCheckItems = allCheckItems.Count - projectCheckItems.Count,
-            //    CheckItems = checkItemsNotChecked
-            //};
-
-            return Ok(checkItemsNotChecked);
+            var notCheckedCheckItems = await _checkItemService.ShowOnlyCheckItemsNotCheckedByProject(projectId);
+            return Ok(notCheckedCheckItems);
         }
 
         [SwaggerOperation(Summary = "Return all CheckItems CHECKED by projectId.")]
         [HttpGet("project/{projectId}/checked")]
-        public async Task<ActionResult<List<CheckItem>>> ShowOnlyCheckingsCheckedByProject(int projectId)
+        public async Task<ActionResult<List<CheckItem>>> ShowOnlyCheckItemsCheckedByProject(int projectId)
         {
             var findProject = await _context.Projects.FirstOrDefaultAsync(x => x.ProjectId == projectId);
             if (findProject == null) return NotFound("Project not found.");
 
-            var projectCheckItems = await _context.Projects
-                .Where(x => x.ProjectId == projectId)
-                .SelectMany(x => x.Checking.Select(x => x.CheckItem))
-                .ToListAsync();
-
-            return Ok(projectCheckItems);
+            var checkiedCheckItems = await _checkItemService.ShowOnlyCheckItemsCheckedByProject(projectId);
+            return Ok(checkiedCheckItems);
         }
 
         [SwaggerOperation(Summary = "Create new CheckItem.")]
         [HttpPost("create")]
         public async Task<ActionResult<CheckItem>> AddCheckItem(CheckItemCreateDTO checkItemDto)
         {
-            checkItemDto.Category = checkItemDto.Category.ToUpper();
-            var newCheckItem = _mapper.Map<CheckItem>(checkItemDto);
-            _context.CheckItems.Add(newCheckItem);
-            await _context.SaveChangesAsync();
-
+            var newCheckItem = await _checkItemService.CreateCheckItem(checkItemDto);
             return Ok(newCheckItem);
         }
 
@@ -104,18 +81,9 @@ namespace Checkingx.Server.Controllers
         [HttpPut("update/{checkItemId}")]
         public async Task<ActionResult<CheckItem>> UpdateCheckItem(CheckItemUpdateDTO checkItemDto, int checkItemId)
         {
-            var findCheckItem = await _context.CheckItems.FirstOrDefaultAsync(x => x.CheckItemId == checkItemId);
-            if (findCheckItem == null)
+            var updateCheckItem = await _checkItemService.UpdateCheckItem(checkItemDto, checkItemId);
+            if (updateCheckItem == null)
                 return NotFound("CheckItem not found.");
-
-            findCheckItem.Title = checkItemDto.Title;
-            findCheckItem.Category = checkItemDto.Category;
-            findCheckItem.Priority = checkItemDto.Priority;
-            findCheckItem.Update = DateTime.Now;
-
-            var updateCheckItem = _mapper.Map(checkItemDto, findCheckItem);
-            _context.Entry(findCheckItem).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
 
             return Ok(updateCheckItem);
         }
@@ -128,9 +96,7 @@ namespace Checkingx.Server.Controllers
             if (findCheckItem == null)
                 return NotFound("CheckItem not found.");
 
-            _context.CheckItems.Remove(findCheckItem);
-            await _context.SaveChangesAsync();
-
+            await _checkItemService.DeleteCheckItem(checkItemId);
             return Ok();
         }
     }
