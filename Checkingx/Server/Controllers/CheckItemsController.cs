@@ -1,10 +1,7 @@
-﻿using AutoMapper;
-using Checkingx.Server.Data;
-using Checkingx.Server.Services;
+﻿using Checkingx.Server.Services;
 using Checkingx.Shared;
 using Checkingx.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Checkingx.Server.Controllers
@@ -13,15 +10,13 @@ namespace Checkingx.Server.Controllers
     [ApiController]
     public class CheckItemsController : ControllerBase
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
         private readonly ICheckItemService _checkItemService;
+        private readonly IProjectService _projectService;
 
-        public CheckItemsController(DataContext context, IMapper mapper, ICheckItemService checkItemService)
+        public CheckItemsController(ICheckItemService checkItemService, IProjectService projectService)
         {
-            _context = context;
-            _mapper = mapper;
             _checkItemService = checkItemService;
+            _projectService = projectService;
         }
 
         [SwaggerOperation(Summary = "Return all check items.")]
@@ -51,7 +46,7 @@ namespace Checkingx.Server.Controllers
         [HttpGet("project/{projectId}/not-checked")]
         public async Task<ActionResult<List<CheckItem>>> ShowOnlyCheckItemsNotCheckedByProject(int projectId)
         {
-            var findProject = await _context.Projects.FirstOrDefaultAsync(x => x.ProjectId == projectId);
+            var findProject = await _projectService.GetSingleProject(projectId);
             if (findProject == null) return NotFound("Project not found.");
 
             var notCheckedCheckItems = await _checkItemService.ShowOnlyCheckItemsNotCheckedByProject(projectId);
@@ -62,7 +57,7 @@ namespace Checkingx.Server.Controllers
         [HttpGet("project/{projectId}/checked")]
         public async Task<ActionResult<List<CheckItem>>> ShowOnlyCheckItemsCheckedByProject(int projectId)
         {
-            var findProject = await _context.Projects.FirstOrDefaultAsync(x => x.ProjectId == projectId);
+            var findProject = await _projectService.GetSingleProject(projectId);
             if (findProject == null) return NotFound("Project not found.");
 
             var checkiedCheckItems = await _checkItemService.ShowOnlyCheckItemsCheckedByProject(projectId);
@@ -92,7 +87,7 @@ namespace Checkingx.Server.Controllers
         [HttpDelete("delete/{checkItemId}")]
         public async Task<ActionResult> DeleteProject(int checkItemId)
         {
-            var findCheckItem = await _context.CheckItems.FirstOrDefaultAsync(x => x.CheckItemId == checkItemId);
+            var findCheckItem = await _checkItemService.GetSingleCheckItem(checkItemId);
             if (findCheckItem == null)
                 return NotFound("CheckItem not found.");
 

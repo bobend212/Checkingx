@@ -15,14 +15,14 @@ namespace Checkingx.Client.Services
 
         public async Task GetAllCheckingsByProject(int projectId)
         {
-            var result = await _http.GetFromJsonAsync<List<Checking>>($"api/CheckingList/all/project/{projectId}");
+            var result = await _http.GetFromJsonAsync<List<Checking>>($"api/Checking/all/project/{projectId}");
             if (result != null)
                 CheckingList = result;
         }
 
         public async Task<Checking> GetSingleChecking(int checkingId)
         {
-            var result = await _http.GetFromJsonAsync<Checking>($"api/CheckingList/single/{checkingId}");
+            var result = await _http.GetFromJsonAsync<Checking>($"api/Checking/single/{checkingId}");
             if (result != null)
                 return result;
 
@@ -31,12 +31,12 @@ namespace Checkingx.Client.Services
 
         public async Task CreateCheckingItem(Checking checking)
         {
-            var result = await _http.PostAsJsonAsync("api/CheckingList/create", checking);
+            var result = await _http.PostAsJsonAsync("api/Checking/create", checking);
         }
 
         public async Task FixError(Checking checking)
         {
-            var result = await _http.PutAsJsonAsync($"api/CheckingList/single/fix/{checking.CheckingId}", checking);
+            var result = await _http.PutAsJsonAsync($"api/Checking/single/fix/{checking.CheckingId}", checking);
         }
     }
 }

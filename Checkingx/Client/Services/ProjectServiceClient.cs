@@ -1,17 +1,14 @@
-﻿using Microsoft.AspNetCore.Components;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 
 namespace Checkingx.Client.Services
 {
     public class ProjectServiceClient : IProjectServiceClient
     {
         private readonly HttpClient _http;
-        private readonly NavigationManager _navigationManager;
 
-        public ProjectServiceClient(HttpClient http, NavigationManager navigationManager)
+        public ProjectServiceClient(HttpClient http)
         {
             _http = http;
-            _navigationManager = navigationManager;
         }
 
         public List<Project> Projects { get; set; } = new List<Project>();
@@ -47,26 +44,6 @@ namespace Checkingx.Client.Services
         public async Task DeleteProject(int id)
         {
             var result = await _http.DeleteAsync($"api/project/delete/{id}");
-        }
-
-        private async Task SetProjects(HttpResponseMessage result)
-        {
-            var response = await result.Content.ReadFromJsonAsync<List<Project>>();
-            Projects = response;
-            _navigationManager.NavigateTo("projects");
-        }
-
-
-        //
-
-        public async Task CreateCheckingItem(Checking checking)
-        {
-            var result = await _http.PostAsJsonAsync("api/CheckingList/check-item-add", checking);
-        }
-
-        public async Task FixError(Checking checking)
-        {
-            var result = await _http.PutAsJsonAsync($"api/CheckingList/single/fix/{checking.CheckingId}", checking);
         }
     }
 }

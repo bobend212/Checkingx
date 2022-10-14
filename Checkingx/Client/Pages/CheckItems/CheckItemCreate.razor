@@ -58,7 +58,13 @@
     MudForm? form;
     int tempOrderNo = 0;
 
-    List<string> categories = new List<string>() { "Panels", "Slab", "Roof" };
+    List<string> categories = new List<string>();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await CheckItemService.GetAllCheckItems();
+        categories = CheckItemService.CheckItemList.Select(x => x.Category).Distinct().ToList();
+    }
 
     async Task ShowLastItemsByCategory()
     {
@@ -72,7 +78,7 @@
         var result = await CheckItemService.CreateCheckItem(checkItem);
         if (result.CheckItemId != 0)
         {
-            Toaster.Info($"New Item Created");
+            Toaster.Info($"New Check Item Created");
             NavigationManager.NavigateTo("/checkitem-home");
         }
         else

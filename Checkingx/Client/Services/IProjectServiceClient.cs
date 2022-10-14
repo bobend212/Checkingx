@@ -14,12 +14,5 @@
         Task UpdateProject(Project project);
 
         Task DeleteProject(int id);
-
-
-        ///
-
-        Task CreateCheckingItem(Checking checking);
-
-        Task FixError(Checking checking);
     }
 }

@@ -1,49 +1,42 @@
-﻿using AutoMapper;
-using Checkingx.Server.Data;
+﻿using Checkingx.Server.Services;
 using Checkingx.Shared;
 using Checkingx.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Checkingx.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CheckingListController : ControllerBase
+    public class CheckingController : ControllerBase
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
+        private readonly ICheckingService _checkingService;
 
-        public CheckingListController(DataContext context, IMapper mapper)
+        public CheckingController(ICheckingService checkingService)
         {
-            _context = context;
-            _mapper = mapper;
+            _checkingService = checkingService;
         }
 
         [SwaggerOperation(Summary = "Return all checkings.")]
         [HttpGet("all")]
         public async Task<ActionResult<List<Checking>>> GetAllCheckings()
         {
-            return Ok(await _context.Checking.ToListAsync());
+            return Ok(await _checkingService.GetAllCheckings());
         }
 
         [SwaggerOperation(Summary = "Return all checkings by project Id.")]
         [HttpGet("all/project/{projectId}")]
         public async Task<ActionResult<List<Checking>>> GetAllCheckingsByProjectId(int projectId)
         {
-            var findCheckings = await _context.Checking.Where(x => x.ProjectId == projectId).Include(x => x.CheckItem).Include(x => x.Images).ToListAsync();
-
-            return Ok(findCheckings);
+            return Ok(await _checkingService.GetAllCheckingsByProjectId(projectId));
         }
 
         [SwaggerOperation(Summary = "Return single checking entry by checking Id.")]
         [HttpGet("single/{checkingId}")]
         public async Task<ActionResult<Checking>> GetSingleCheckingById(int checkingId)
         {
-            var findChecking = await _context.Checking.Include(x => x.Images).Include(x => x.CheckItem).FirstOrDefaultAsync(x => x.CheckingId == checkingId);
+            var findChecking = await _checkingService.GetSingleChecking(checkingId);
             if (findChecking == null) return NotFound("Checking not found.");
-
             return Ok(findChecking);
         }
 
@@ -51,10 +44,7 @@ namespace Checkingx.Server.Controllers
         [HttpPost("create")]
         public async Task<ActionResult<Checking>> PostChecking(CheckingCreateDTO modelDto)
         {
-            var newChecking = _mapper.Map<Checking>(modelDto);
-            _context.Checking.Add(newChecking);
-            await _context.SaveChangesAsync();
-
+            var newChecking = await _checkingService.CreateChecking(modelDto);
             return Ok(newChecking);
         }
 
@@ -62,14 +52,9 @@ namespace Checkingx.Server.Controllers
         [HttpPut("single/fix/{checkingId}")]
         public async Task<ActionResult<Checking>> FixError(CheckingCorrectDTO checking, int checkingId)
         {
-            var findChecking = await _context.Checking.FirstOrDefaultAsync(x => x.CheckingId == checkingId);
+            var findChecking = await _checkingService.FixErrorChecking(checking, checkingId);
             if (findChecking == null)
                 return NotFound("Checking not found.");
-
-            findChecking.Status = checking.Status;
-            findChecking.ReviewDate = DateTime.Now;
-
-            await _context.SaveChangesAsync();
 
             return Ok(findChecking);
         }
@@ -78,13 +63,9 @@ namespace Checkingx.Server.Controllers
         [HttpPost("single/correct")]
         public async Task<ActionResult<Checking>> MarkAsCorrect(Checking checking)
         {
-            var findChecking = await _context.Checking.FirstOrDefaultAsync(x => x.CheckingId == checking.CheckingId);
+            var findChecking = await _checkingService.MarkAsCorrectChecking(checking);
             if (findChecking == null)
                 return NotFound("Checking not found.");
-
-            findChecking.Status = checking.Status;
-
-            await _context.SaveChangesAsync();
 
             return Ok(findChecking);
         }

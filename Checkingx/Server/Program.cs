@@ -23,6 +23,7 @@ builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(builder.
 
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<ICheckItemService, CheckItemService>();
+builder.Services.AddScoped<ICheckingService, CheckingService>();
 
 var app = builder.Build();
 
