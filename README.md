@@ -9,24 +9,7 @@
   </p>
 </p>
 
-
-<!-- TABLE OF CONTENTS -->
-
-<details open="open">
-  <summary>Table of Contents</summary>
-  <ol>
-    <li><a href="#about-the-project">About The Project</a></li>
-	<li><a href="#built-with">Built With</a></li>
-	<li><a href="#features">Features</a></li>
-	<li><a href="#possible-features">Possible Features</a></li>
-	<li><a href="#screenshots">Screenshots</a></li>
-  </ol>
-</details>
-
-
-<!-- ABOUT THE PROJECT -->
-
-## About The Project
+<hr />
 
 The main goal of the application is to improve and facilitate the process of checking projects.
 
@@ -60,7 +43,3 @@ My idea of checking process is composed with 2 phases:
 - User authentication
 - Data charts
 - Data validation
-
-## Screenshots
-
-![ttt](images/1.%20Check%20Items%20section.jpeg)
