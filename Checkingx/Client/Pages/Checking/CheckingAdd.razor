@@ -6,7 +6,7 @@
 @inject Sotsera.Blazor.Toaster.IToaster Toaster
 
 <div style="display: flex; justify-content:space-between; margin-bottom: 5px">
-    <MudText Typo="Typo.h5">Checking</MudText>
+    <MudText Typo="Typo.h5">Checking / @project.Number @project.Name</MudText>
     <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Filled.ArrowBackIosNew" @onclick="(() => BackToProjects())">Back</MudButton>
 </div>
 <hr />

@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 
 <div style="display: flex; justify-content:space-between" class="mb-5">
-    <MudText Typo="Typo.h5">Checking - Review</MudText>
+    <MudText Typo="Typo.h5">Review / @project.Number @project.Name</MudText>
     <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Filled.ArrowBackIosNew" @onclick="(() => BackToProjects())">Back</MudButton>
 </div>
 <hr />
@@ -70,10 +70,12 @@ else
     [Parameter]
     public int Id { get; set; }
 
+    Project project = new();
     List<Checking> checkingList = new();
 
     protected async override Task OnParametersSetAsync()
     {
+        project = await ProjectService.GetSingleProject(Id);
         await CheckingService.GetAllCheckingsByProject(Id);
         checkingList = CheckingService.CheckingList;
     }

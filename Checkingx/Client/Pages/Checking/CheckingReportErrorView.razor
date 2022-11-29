@@ -1,11 +1,12 @@
 ﻿@page "/error-report/{projectId:int}/{checkItemId:int}"
 @inject ICheckingServiceClient CheckingService
+@inject IProjectServiceClient ProjectService
 @inject ICheckItemServiceClient CheckItemService
 @inject NavigationManager NavigationManager
 @inject Sotsera.Blazor.Toaster.IToaster Toaster
 
 <div style="display: flex; justify-content:space-between" class="mb-5">
-    <MudText Typo="Typo.h5">Checking - Error Report</MudText>
+    <MudText Typo="Typo.h5">Checking - Report Error / @project.Number @project.Name</MudText>
     <MudButton Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Filled.ArrowBackIosNew" @onclick="(() => BackToChecking())">Back to checking</MudButton>
 </div>
 <hr />
@@ -47,6 +48,7 @@
     [Parameter]
     public int CheckItemId { get; set; }
 
+    Project project = new();
     CheckItem checkItem = new();
     Checking newChecking = new();
     List<Image> imagesList = new();
@@ -54,6 +56,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        project = await ProjectService.GetSingleProject(ProjectId);
         checkItem = await CheckItemService.GetSingleCheckItem(CheckItemId);
     }
 

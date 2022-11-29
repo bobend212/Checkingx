@@ -1,8 +1,10 @@
 ﻿@page "/checking/{id:int}/details"
 @inject ICheckingServiceClient CheckingService
+@inject IProjectServiceClient ProjectService
 @inject NavigationManager NavigationManager
 @inject Sotsera.Blazor.Toaster.IToaster Toaster
 
+<MudText Typo="Typo.h5">Review / @project.Number @project.Name </MudText>
 <div class="card">
     <div class="@CardHeaderStyle(@checking.Status)" style="display: flex; justify-content: space-between">
         <h5>Error Description</h5>
@@ -41,10 +43,12 @@
     public int Id { get; set; }
 
     Checking checking = new Checking();
+    Project project = new Project();
 
     protected async override Task OnParametersSetAsync()
     {
         checking = await CheckingService.GetSingleChecking(Id);
+        project = await ProjectService.GetSingleProject(checking.ProjectId);
     }
 
     async Task HandleCorrect()
