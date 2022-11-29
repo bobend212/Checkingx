@@ -1,10 +1,10 @@
 <br />
 <p align="center">
 
-  <h3 align="center">Best-README-Template</h3>
+  <h3 align="center">Checkingx</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    Project checking application targeted for design offices collaborating in teams with many projects at the same time.
     <br />
   </p>
 </p>
@@ -19,6 +19,7 @@
 	<li><a href="#built-with">Built With</a></li>
 	<li><a href="#features">Features</a></li>
 	<li><a href="#possible-features">Possible Features</a></li>
+	<li><a href="#screenshots">Screenshots</a></li>
   </ol>
 </details>
 
@@ -27,29 +28,37 @@
 
 ## About The Project
 
-A README file contains information about other files in a directory or archive of computer software. A form of documentation, it is usually a simple plain text file. There are many great README templates available on GitHub, but I think that this README template is so amazing that it'll be the last one you ever need -- I think this is it.
+The main goal of the application is to improve and facilitate the process of checking projects.
 
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should element DRY principles to the rest of your life :smile:
+My idea of checking process is composed with 2 phases:
+1. Checking - At this point, the user goes through all the checkpoints and mark them as OK, Incorrect or N/A, optionally with attached screenshot. 
+2. Review - When checking phase is finished, then Review phase could be started. Here another user checks all items marked as "incorrect" and correct them if required.
 
 ### Built With
 
-- Major languages
-- Frameworks
-- Technologies used
+- Blazor and C#
+- Entity Framework
+- SQLite
+- Newtonsoft.Json
+- MudBlazor (UI components)
 
 ## Features
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+- All projects and check items are stored in the database
+- Checking items are grouped by categories
+- Each checking item has its own history and priority
+- Each checking item has its unique order number. This solution helps list checking items during checking process in the expected order.
+- Each checking item can be updated or removed.
+- Checker can attach screenshots of the errors and inculde description.
+- Uploaded screenshots are stored in database.
+- Review progress is showed in the main table.
+- Filtering of the project or check items.
+- Data pagination.
 
 ## Possible features
 
-- Major languages
-- Frameworks
-- Technologies used
+- User authentication
+- Data charts
+- Data validation
 
-
-
+## Screenshots
