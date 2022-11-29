@@ -62,3 +62,5 @@ My idea of checking process is composed with 2 phases:
 - Data validation
 
 ## Screenshots
+
+![ttt](images/1.%20Check%20Items%20section.jpeg)
