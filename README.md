@@ -4,7 +4,7 @@
   <h3 align="center">Checkingx</h3>
 
   <p align="center">
-    Project checking application targeted for design offices collaborating in teams with many projects at same time.
+    Project checking application targeted for design offices collaborating in teams with many projects at the same time.
     <br />
   </p>
 </p>
@@ -57,9 +57,8 @@ My idea of checking process is composed with 2 phases:
 
 ## Possible features
 
-- Major languages
-- Frameworks
-- Technologies used
+- User authentication
+- Data charts
+- Data validation
 
 ## Screenshots
-
